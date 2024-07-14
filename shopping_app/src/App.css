@@ -1,0 +1,48 @@
+/* styles.css */
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.App {
+  display: flex;
+}
+
+.navbar {
+  position: fixed; /* Fixes the navbar to a specific position */
+  left: 0; /* Aligns the navbar to the left edge */
+  top: 0; /* Aligns the navbar to the top edge */
+  height: 100vh; /* Makes the navbar take the full height of the viewport */
+  width: 150px; /* Set a fixed width for the navbar */
+  background-color: #333; /* Background color for the navbar */
+  display: flex; /* Enables flexbox for the navbar */
+  flex-direction: column; /* Makes the links stack vertically */
+  padding: 20px; /* Adds some padding */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Adds a shadow for better separation */
+}
+
+.navbar a {
+  color: white; /* Makes the link text white */
+  text-decoration: none; /* Removes the underline from links */
+  margin: 10px 0; /* Adds some space between the links */
+}
+
+.navbar a:hover {
+  text-decoration: underline; /* Underlines the link on hover */
+}
+
+.content {
+  margin-left: 200px; /* Adds a left margin to make room for the navbar */
+  padding: 30px; /* Adds some padding */
+  width: calc(100% - 200px); /* Adjusts the width of the content */
+}
+
+.error {
+  text-align: center;
+  font-size: 20px;
+  color: red;
+}

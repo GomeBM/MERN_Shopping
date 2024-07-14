@@ -1,0 +1,12 @@
+/* src/components/ProductList.css */
+
+.product-list {
+  display: grid; /* Use CSS Grid for layout */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  ); /* Define the columns */
+  gap: 50px; /* Add space between the cards */
+  padding: 20px; /* Add some padding */
+  justify-content: center; /* Center the content horizontally */
+}
