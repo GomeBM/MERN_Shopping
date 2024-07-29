@@ -5,9 +5,12 @@ import { useCookies } from "react-cookie";
 
 export const Navbar = () => {
   const [cookies, setCookies] = useCookies(["access_token"]);
+  const navigate = useNavigate();
   const handleLogout = () => {
     setCookies("access_token", "");
     window.localStorage.removeItem("userName");
+    navigate("/"); // Add this line
+    window.location.reload(); // Add this line
   };
 
   return (

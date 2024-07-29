@@ -61,3 +61,30 @@ button:hover {
   background-color: #74b2f8;
   transform: scale(1.08);
 }
+
+/* Add this to your Shop.css */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 10px;
+  border: 1px solid #4f93e6;
+  border-radius: 4px;
+  background-color: #4f93e6;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #74b2f8;
+}

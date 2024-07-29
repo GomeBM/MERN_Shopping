@@ -1,10 +1,10 @@
-//FOR ENVIRONMENT VARIABLES:
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const productRoutes = require("./routes/products");
 const usersRoutes = require("./routes/users");
+const cartRoutes = require("./routes/cart");
 const PORT = process.env.PORT || 4000;
 
 //app
@@ -17,6 +17,7 @@ app.use(express.json());
 //routes
 app.use("/", productRoutes);
 app.use("/auth", usersRoutes);
+app.use("/cart", cartRoutes);
 
 //Connecting to mongoDB and starting the server only if the connection worked
 mongoose

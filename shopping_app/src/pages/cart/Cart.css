@@ -1,4 +1,40 @@
-h1 {
-  font-size: 2em; /* Font size for the title */
-  text-align: center; /* Center the title text */
+.cart-page {
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+.cart-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cart-item {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: calc(33.333% - 20px); /* Adjust based on the number of items per row */
+  margin-bottom: 20px;
+  display: flex;
+}
+
+.cart-item img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.cart-item-details {
+  padding: 10px;
+  flex: 1;
+}
+
+.cart-item-details h2 {
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+.cart-item-details p {
+  margin: 0;
 }

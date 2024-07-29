@@ -1,4 +1,3 @@
-// src/App.js
 import "./App.css";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -7,7 +6,6 @@ import Register from "./components/Authentication/Register";
 import { Navbar } from "./components/Navbar";
 import { Shop } from "./pages/shop/Shop";
 import { Cart } from "./pages/cart/Cart";
-import Logout from "./components/Authentication/Logout";
 
 function App() {
   return (

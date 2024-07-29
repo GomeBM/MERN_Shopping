@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import ProductList from "../../components/ProductList";
+import Popup from "../../components/Popup"; // Ensure correct path to Popup component
 import "./Shop.css";
 
 export const Shop = () => {
@@ -9,6 +10,10 @@ export const Shop = () => {
   const [cookies, setCookies] = useCookies(["access_token"]);
   const [fetchedProducts, setFetchedProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null); // State to track selected category
+  const [showPopup, setShowPopup] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const limit = 20; // Number of products per page
 
   useEffect(() => {
     if (cookies.access_token) {
@@ -18,40 +23,66 @@ export const Shop = () => {
       }
     }
 
-    const fetchAllProducts = async () => {
-      try {
-        const response = await fetch("http://localhost:4000");
-        const data = await response.json();
+    const fetchProducts = async () => {
+      if (!selectedCategory) {
+        setLoading(true);
+        const data = await fetchAllProducts(page, limit);
         setFetchedProducts(data.products);
-      } catch (error) {
-        console.error("Error fetching all products:", error);
+        setTotalProducts(data.totalProducts);
+        setLoading(false);
+      } else {
+        fetchProductByCategory(selectedCategory);
       }
     };
 
-    const fetchProductByCategory = async (category) => {
-      try {
-        const response = await fetch(`http://localhost:4000/${category}`);
-        const data = await response.json();
-        setFetchedProducts(data.products);
-      } catch (error) {
-        console.error(
-          `Error fetching products for category ${category}:`,
-          error
-        );
-      }
-    };
+    fetchProducts();
+  }, [cookies.access_token, selectedCategory, page]); // useEffect runs whenever cookies.access_token, selectedCategory, or page changes
 
-    // Fetch products based on selected category or fetch all products if no category is selected
-    selectedCategory
-      ? fetchProductByCategory(selectedCategory)
-      : fetchAllProducts();
-
-    setLoading(false); // Set loading to false after checking cookies and localStorage
-  }, [cookies.access_token, selectedCategory]); // useEffect runs whenever cookies.access_token or selectedCategory changes
-
-  // Function to handle button click for category selection
   const handleCategoryClick = (category) => {
     setSelectedCategory(category === selectedCategory ? null : category);
+    setPage(1); // Reset to first page when category changes
+  };
+
+  const handleAddToCart = () => {
+    const userName = window.localStorage.getItem("userName");
+    if (!userName) {
+      setShowPopup(true);
+    } else {
+      // Add the product to the cart logic here
+    }
+  };
+
+  const totalPages = Math.ceil(totalProducts / limit);
+
+  const fetchAllProducts = async (page = 1, limit = 20) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/productsDB?page=${page}&limit=${limit}`
+      );
+      const data = await response.json();
+
+      // Check if the data format is correct
+      if (!data || !Array.isArray(data.products)) {
+        throw new Error("Unexpected response format");
+      }
+
+      console.log("Fetched products data:", data); // Log the data received from API
+      return data;
+    } catch (error) {
+      console.error("Error fetching all products:", error);
+      // Return default values to avoid breaking the app
+      return { products: [], totalProducts: 0 };
+    }
+  };
+
+  const fetchProductByCategory = async (category) => {
+    try {
+      const response = await fetch(`http://localhost:4000/${category}`);
+      const data = await response.json();
+      setFetchedProducts(data.products);
+    } catch (error) {
+      console.error(`Error fetching products for category ${category}:`, error);
+    }
   };
 
   return (
@@ -228,7 +259,29 @@ export const Shop = () => {
           Womens Jewellery
         </button>
       </div>
-      <ProductList products={fetchedProducts} />
+      <ProductList products={fetchedProducts} popUpCheck={handleAddToCart} />
+      {selectedCategory === null && (
+        <div className="pagination">
+          <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+            Previous
+          </button>
+          <span>
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={page === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
+      {showPopup && (
+        <Popup
+          message="Please log in to add items to your cart"
+          onClose={() => setShowPopup(false)}
+        />
+      )}
     </div>
   );
 };
