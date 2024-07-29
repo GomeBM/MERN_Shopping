@@ -56,27 +56,10 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-// Controller function to fetch all products from the database
-// exports.getAllProductsFromDB = async (req, res) => {
-//   try {
-//     // Fetch all products from the database
-//     const products = await productModel.find(); // Retrieves all products
-
-//     // Send the products in the response
-//     res.status(200).json({ products });
-//   } catch (error) {
-//     console.log("Database fetch error:", error);
-//     if (!res.headersSent) {
-//       res.status(500).json({ error: error.message });
-//     }
-//   }
-// };
-
 exports.getAllProductsFromDB = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 20;
   const skip = (page - 1) * limit;
-
   try {
     const products = await productModel.find().skip(skip).limit(limit);
     const totalProducts = await productModel.countDocuments();
@@ -86,25 +69,59 @@ exports.getAllProductsFromDB = async (req, res) => {
   }
 };
 
-// get all products by category
 exports.getProductByCategory = async (req, res) => {
   const { category } = req.params;
+  const page = parseInt(req.query.page) || 1; // Get page number from query params, default to 1
+  const limit = parseInt(req.query.limit) || 20; // Get limit from query params, default to 20
+  const skip = (page - 1) * limit; // Calculate number of documents to skip
+
   try {
-    const response = await fetch(
-      `https://dummyjson.com/products/category/${category}`
-    );
-    if (!response.ok) {
-      throw new Error(`http error status ${response.status}`);
+    // Query the database for products matching the given category with pagination
+    const products = await productModel
+      .find({ category: category })
+      .skip(skip)
+      .limit(limit);
+
+    // Count the total number of products found
+    const totalProducts = await productModel.countDocuments({
+      category: category,
+    });
+
+    // Check if any products are found
+    if (totalProducts === 0) {
+      return res.status(404).json({
+        message: "No products found for this category",
+        totalProducts: 0,
+      });
     }
-    const data = await response.json();
-    res.status(200).json({ products: data.products });
+    res.status(200).json({ products, totalProducts });
   } catch (error) {
-    console.log("fetch error: ", error);
+    console.log("Database query error: ", error);
     if (!res.headersSent) {
       res.status(500).json({ error: error.message });
     }
   }
 };
+
+// get all products by category
+// exports.getProductByCategory = async (req, res) => {
+//   const { category } = req.params;
+//   try {
+//     const response = await fetch(
+//       `https://dummyjson.com/products/category/${category}`
+//     );
+//     if (!response.ok) {
+//       throw new Error(`http error status ${response.status}`);
+//     }
+//     const data = await response.json();
+//     res.status(200).json({ products: data.products });
+//   } catch (error) {
+//     console.log("fetch error: ", error);
+//     if (!res.headersSent) {
+//       res.status(500).json({ error: error.message });
+//     }
+//   }
+// };
 
 exports.getProductById = async (req, res) => {
   const { _id } = req.params;
