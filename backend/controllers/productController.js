@@ -1,6 +1,6 @@
 const productModel = require("../models/productModel");
 
-// get ALL products
+// get ALL products from dummyjson api, this was used once in order to store all of the products in the DB
 exports.getAllProducts = async (req, res) => {
   try {
     // Fetch products from the API
@@ -12,41 +12,42 @@ exports.getAllProducts = async (req, res) => {
     const data = await response.json();
     console.log("Data from dummyjson:", data);
 
-    // Transform and filter the data
-    // const filteredProducts = data.products.map((product) => ({
-    //   id: product.id,
-    //   title: product.title,
-    //   description: product.description,
-    //   category: product.category,
-    //   price: product.price,
-    //   rating: product.rating,
-    //   tags: product.tags,
-    //   brand: product.brand,
-    //   weight: product.weight,
-    //   dimensions: {
-    //     width: product.dimensions.width,
-    //     height: product.dimensions.height,
-    //     depth: product.dimensions.depth,
-    //   },
-    //   reviews: product.reviews.map((review) => ({
-    //     rating: review.rating,
-    //     comment: review.comment,
-    //     date: new Date(review.date),
-    //     reviewerName: review.reviewerName,
-    //     reviewerEmail: review.reviewerEmail,
-    //   })),
-    //   thumbnail: product.thumbnail,
-    //   images: product.images,
-    // }));
+    //Transform and filter the data to the productSchema and save it to mongoDB
+    const filteredProducts = data.products.map((product) => ({
+      id: product.id,
+      title: product.title,
+      description: product.description,
+      category: product.category,
+      price: product.price,
+      rating: product.rating,
+      tags: product.tags,
+      brand: product.brand,
+      weight: product.weight,
+      dimensions: {
+        width: product.dimensions.width,
+        height: product.dimensions.height,
+        depth: product.dimensions.depth,
+      },
+      reviews: product.reviews.map((review) => ({
+        rating: review.rating,
+        comment: review.comment,
+        date: new Date(review.date),
+        reviewerName: review.reviewerName,
+        reviewerEmail: review.reviewerEmail,
+      })),
+      thumbnail: product.thumbnail,
+      images: product.images,
+    }));
 
-    // Save each product to MongoDB
-    // for (const product of filteredProducts) {
-    //   await productModel.findOneAndUpdate(
-    //     { id: product.id }, // Search by API id
-    //     product, // Update with the filtered data
-    //     { upsert: true, new: true } // Create if not exists, return the new document
-    //   );
-    // }
+    //Save each product to MongoDB
+    for (const product of filteredProducts) {
+      await productModel.findOneAndUpdate(
+        { id: product.id }, // Search by API id
+        product, // Update with the filtered data
+        { upsert: true, new: true } // Create if not exists, return the new document
+      );
+    }
+
     res.status(200).json({ products: data.products });
   } catch (error) {
     console.log("fetch error:", error);
@@ -56,12 +57,23 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+//GET all products from the mongoDB after saving them there with the function above
+// exports.getAllProductsFromDB = async (req, res) => {
+//   const page = parseInt(req.query.page) || 1;
+//   const limit = parseInt(req.query.limit) || 20;
+//   const skip = (page - 1) * limit;
+//   try {
+//     const products = await productModel.find().skip(skip).limit(limit);
+//     const totalProducts = await productModel.countDocuments();
+//     res.json({ products, totalProducts });
+//   } catch (error) {
+//     res.status(500).send("Server error");
+//   }
+// };
+
 exports.getAllProductsFromDB = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
-  const skip = (page - 1) * limit;
   try {
-    const products = await productModel.find().skip(skip).limit(limit);
+    const products = await productModel.find();
     const totalProducts = await productModel.countDocuments();
     res.json({ products, totalProducts });
   } catch (error) {
@@ -69,6 +81,7 @@ exports.getAllProductsFromDB = async (req, res) => {
   }
 };
 
+//GET all products based on the category param beeing passed
 exports.getProductByCategory = async (req, res) => {
   const { category } = req.params;
   const page = parseInt(req.query.page) || 1; // Get page number from query params, default to 1
@@ -103,26 +116,7 @@ exports.getProductByCategory = async (req, res) => {
   }
 };
 
-// get all products by category
-// exports.getProductByCategory = async (req, res) => {
-//   const { category } = req.params;
-//   try {
-//     const response = await fetch(
-//       `https://dummyjson.com/products/category/${category}`
-//     );
-//     if (!response.ok) {
-//       throw new Error(`http error status ${response.status}`);
-//     }
-//     const data = await response.json();
-//     res.status(200).json({ products: data.products });
-//   } catch (error) {
-//     console.log("fetch error: ", error);
-//     if (!res.headersSent) {
-//       res.status(500).json({ error: error.message });
-//     }
-//   }
-// };
-
+//GET a single product by the _id param beeing sent.
 exports.getProductById = async (req, res) => {
   const { _id } = req.params;
   try {

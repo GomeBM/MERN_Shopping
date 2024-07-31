@@ -15,4 +15,6 @@ router.get("/:category", productController.getProductByCategory);
 //GET PRODUCT BY ID:
 router.get("/:id", productController.getProductById);
 
+//GET PRODUCTS BASED ON FILTERS
+
 module.exports = router;

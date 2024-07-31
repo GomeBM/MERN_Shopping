@@ -38,6 +38,38 @@ exports.addToCart = async (req, res) => {
   }
 };
 
+exports.removeFromCart = async (req, res) => {
+  const { userName, product } = req.body;
+  if (!userName || !product || !product._id) {
+    return res
+      .status(400)
+      .json({ error: "userName and product._id are required" });
+  }
+
+  try {
+    // Find the user by userName
+    const user = await userModel.findOne({ username: userName });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Remove the product from the cart
+    user.cart = user.cart.filter(
+      (cartItem) => cartItem.product._id.toString() !== product._id
+    );
+
+    // Save the updated user document
+    await user.save();
+
+    // Return the updated cart
+    res.json({ cart: user.cart });
+  } catch (error) {
+    console.error("Error removing product from cart:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 //Get user's cart
 exports.getUserCart = async (req, res) => {
   const { userName } = req.params;
