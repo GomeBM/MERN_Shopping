@@ -6,6 +6,7 @@ import Register from "./components/Authentication/Register";
 import { Navbar } from "./components/Navbar";
 import { Shop } from "./pages/shop/Shop";
 import { Cart } from "./pages/cart/Cart";
+import About from "./pages/about/About";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </div>
       </BrowserRouter>

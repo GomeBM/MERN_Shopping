@@ -91,12 +91,12 @@ button {
   border-radius: 4px;
   background-color: #4f93e6;
   cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.3s ease;
   transition: transform 0.3s ease;
 }
 
 button:hover {
-  background-color: #74b2f8;
   transform: scale(1.08);
 }
 
