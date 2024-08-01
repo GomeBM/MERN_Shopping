@@ -11,8 +11,13 @@
   font-size: 2em;
 }
 
-h3 {
+h3,
+h1 {
   text-align: center;
+}
+
+h1 {
+  font-size: 40px;
 }
 
 .filter-section {

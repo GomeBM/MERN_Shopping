@@ -7,6 +7,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  justify-content: center; /* Center items horizontally */
 }
 
 .cart-item {
@@ -14,20 +15,22 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: calc(33.333% - 20px); /* Adjust based on the number of items per row */
-  margin-bottom: 20px;
+  width: 240px; /* Fixed width or adjust as needed */
   display: flex;
+  flex-direction: column;
 }
 
 .cart-item img {
   width: 150px;
   height: 150px;
   object-fit: cover;
+  margin: 10px auto; /* Add some margin if needed */
 }
 
 .cart-item-details {
   padding: 10px;
   flex: 1;
+  text-align: center;
 }
 
 .cart-item-details h2 {
