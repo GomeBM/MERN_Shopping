@@ -26,6 +26,7 @@ export const Shop = () => {
   const [showRatingFilter, setShowRatingFilter] = useState(false);
   const [showCategoriesFilter, setShowCategoriesFilter] = useState(false);
   const [showSearchFilter, setShowSearchFilter] = useState(false); // New state for search filter visibility
+  const [wishlist, setWishlist] = useState([]);
   const limit = 9;
 
   useEffect(() => {
@@ -34,9 +35,29 @@ export const Shop = () => {
       if (storedUserName) {
         setUserName(storedUserName);
       }
+      fetchWishlist();
     }
     fetchAllProducts();
   }, [cookies.access_token]);
+
+  const fetchWishlist = async () => {
+    const userName = window.localStorage.getItem("userName");
+    if (!userName) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/auth/${userName}/get-wishlist`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setWishlist(data.wishlist);
+      } else {
+        console.error("Error fetching wishlist");
+      }
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
+    }
+  };
 
   const fetchAllProducts = async () => {
     setLoading(true);
@@ -108,6 +129,16 @@ export const Shop = () => {
       message: `${product.title} has been added to your cart`,
       productImage: product.thumbnail,
     });
+  };
+
+  const handleLikedProduct = (product) => {
+    if (!userName) {
+      setShowPopup({
+        show: true,
+        message: `Please login to your account to like products`,
+        productImage: null,
+      });
+    }
   };
 
   const clearFilters = () => {
@@ -267,7 +298,10 @@ export const Shop = () => {
         <ProductList
           products={paginatedProducts}
           popUpCheck={handleAddToCart}
+          popUpCheckLiked={handleLikedProduct}
           isHeart={true}
+          wishlist={wishlist}
+          updateWishlist={setWishlist}
         />
       ) : (
         <p>No products available</p>

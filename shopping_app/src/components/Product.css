@@ -33,18 +33,21 @@
 }
 
 .add-to-cart-btn {
-  margin-top: auto;
-  margin-bottom: 8px;
-  padding: 10px 20px;
-  background-color: #3563cd;
-  color: white;
+  background-color: #007bff; /* Primary color */
+  color: #fff; /* White text */
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  padding: 12px 20px; /* Padding for the button */
+  font-size: 16px; /* Font size */
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 20px; /* Space above the button */
+  text-align: center; /* Center text inside the button */
 }
 
 .add-to-cart-btn:hover {
-  background-color: #5782e5;
+  background-color: #0056b3; /* Darker shade of primary color on hover */
 }
 
 .quantity-controll {

@@ -78,3 +78,7 @@
   font-weight: bold;
   margin: 20px 0; /* Space above and below the total cost text */
 }
+
+.submit-email_btn {
+  margin-left: 10px;
+}

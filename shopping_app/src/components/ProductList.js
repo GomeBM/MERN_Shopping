@@ -2,7 +2,13 @@ import React from "react";
 import Product from "./Product";
 import "./ProductList.css";
 
-const ProductList = ({ products, popUpCheck }) => {
+const ProductList = ({
+  products,
+  popUpCheck,
+  wishlist,
+  updateWishlist,
+  popUpCheckLiked,
+}) => {
   console.log("Products received:", products); // Log products to check their value
 
   return (
@@ -14,6 +20,9 @@ const ProductList = ({ products, popUpCheck }) => {
             product={product}
             popUpCheck={popUpCheck}
             isHeart={true}
+            wishlist={wishlist}
+            updateWishlist={updateWishlist}
+            popUpCheckLiked={popUpCheckLiked}
           />
         ))
       ) : (

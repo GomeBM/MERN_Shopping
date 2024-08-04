@@ -58,16 +58,17 @@ h1 {
 }
 
 .filter-button {
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  border: 1px solid #4f93e6;
-  border-radius: 4px;
-  background-color: #4f93e6;
+  background-color: #007bff; /* Primary color */
+  color: #fff; /* White text */
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px; /* Padding for the button */
+  font-size: 16px; /* Font size */
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  transition: transform 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 20px; /* Space above the button */
+  text-align: center; /* Center text inside the button */
 }
 
 .filter-button:hover {

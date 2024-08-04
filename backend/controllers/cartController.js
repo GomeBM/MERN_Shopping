@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const productModel = require("../models/productModel");
+const { sendEmail } = require("../mailer");
 
 // Add item to cart
 exports.addToCart = async (req, res) => {
@@ -118,6 +119,19 @@ exports.confirmPurchase = async (req, res) => {
 
     await user.save();
 
+    // Prepare email content
+    const emailContent = user.cart
+      .map(
+        (item) => `Product: ${item.product.name}, Quantity: ${item.quantity}`
+      )
+      .join("\n");
+
+    const emailSubject = "Purchase Confirmation";
+    const emailText = `Thank you for your purchase!\n\nYou have bought:\n${emailContent}`;
+
+    // Send email
+    await sendEmail(user.email, emailSubject, emailText);
+
     res.status(200).json({ message: "Purchase confirmed and cart cleared" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -147,11 +161,30 @@ exports.confirmPurchaseWithEmail = async (req, res) => {
     user.purchase_history.push(newPurchase);
     await user.save();
 
-    // Clear the dummy cart for the user
-    // If you need to clear it from the database, you might want to add more logic here
+    // Prepare email content
+    const emailContent = cart
+      .map((item) => `Product: ${item.productId}, Quantity: ${item.quantity}`)
+      .join("\n");
 
-    res.status(200).json({ message: "Purchase confirmed and cart cleared" });
+    const emailSubject = "Purchase Confirmation";
+    const emailText = `Thank you for your purchase!\n\nYou have bought:\n${emailContent}`;
+
+    // Send email
+    const emailResponse = await sendEmail(user.email, emailSubject, emailText);
+
+    // Log the response for debugging
+    console.log("Email sent successfully:", emailResponse);
+
+    // Clear the dummy cart (if you use a localStorage-based dummy cart, you might handle it differently)
+    // Example: await clearDummyCart(email);
+
+    res
+      .status(200)
+      .json({ message: "Purchase confirmed, cart cleared, and email sent" });
   } catch (error) {
+    // Log the error for debugging
+    console.error("Error confirming purchase with email:", error);
+
     res.status(500).json({ message: error.message });
   }
 };

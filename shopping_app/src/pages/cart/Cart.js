@@ -249,7 +249,12 @@ export const Cart = () => {
                 onChange={handleEmailChange}
                 placeholder="Email address"
               />
-              <button onClick={confirmPurchaseWithEmail}>Submit</button>
+              <button
+                className="submit-email_btn"
+                onClick={confirmPurchaseWithEmail}
+              >
+                Submit and confirm
+              </button>
             </div>
           )}
         </>

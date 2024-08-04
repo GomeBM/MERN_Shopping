@@ -1,49 +1,28 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { FaHeart } from "react-icons/fa";
 import "./Product.css";
 
-const Product = ({ product, popUpCheck }) => {
+const Product = ({
+  product,
+  popUpCheck,
+  wishlist,
+  updateWishlist,
+  popUpCheckLiked,
+}) => {
   const [wishListed, setWishListed] = useState(false);
 
-  // Memoize the wishlist fetch
-  const fetchWishlist = useMemo(() => {
-    return async () => {
-      const userName = window.localStorage.getItem("userName");
-      if (!userName) return [];
-
-      try {
-        const response = await fetch(
-          `http://localhost:4000/auth/${userName}/get-wishlist`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          return data.wishlist;
-        } else {
-          console.error("Error fetching wishlist");
-          return [];
-        }
-      } catch (error) {
-        console.error("Error fetching wishlist:", error);
-        return [];
-      }
-    };
-  }, []); // Empty dependency array means this will only be created once
-
   useEffect(() => {
-    const checkWishlistStatus = async () => {
-      const wishlist = await fetchWishlist();
-      const isWishListed = wishlist.some(
-        (item) => item.productId.toString() === product._id.toString()
-      );
-      setWishListed(isWishListed);
-    };
-
-    checkWishlistStatus();
-  }, [product._id, fetchWishlist]);
+    const isWishListed = wishlist.some(
+      (item) => item.productId.toString() === product._id.toString()
+    );
+    setWishListed(isWishListed);
+  }, [wishlist, product._id]);
 
   const toggleWishlist = async () => {
     const userName = window.localStorage.getItem("userName");
-    if (!userName) return;
+    if (!userName) {
+      popUpCheckLiked();
+    }
 
     const productId = product._id ? product._id.toString() : "";
 
@@ -65,7 +44,17 @@ const Product = ({ product, popUpCheck }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setWishListed((prev) => !prev); // Toggle wishlist status
+        setWishListed((prev) => !prev);
+        if (wishListed) {
+          updateWishlist((prev) =>
+            prev.filter((item) => item.productId !== productId)
+          );
+        } else {
+          updateWishlist((prev) => [
+            ...prev,
+            { productId, productName: product.title, price: product.price },
+          ]);
+        }
       } else {
         console.error(data.message);
       }
