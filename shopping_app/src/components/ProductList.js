@@ -9,7 +9,12 @@ const ProductList = ({ products, popUpCheck }) => {
     <div className="product-list">
       {products.length > 0 ? (
         products.map((product) => (
-          <Product key={product.id} product={product} popUpCheck={popUpCheck} />
+          <Product
+            key={product.id}
+            product={product}
+            popUpCheck={popUpCheck}
+            isHeart={true}
+          />
         ))
       ) : (
         <p>No products available</p>

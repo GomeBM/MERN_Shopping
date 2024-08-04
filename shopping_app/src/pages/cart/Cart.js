@@ -85,6 +85,46 @@ export const Cart = () => {
     }
   };
 
+  const confirmPurchase = async () => {
+    const userName = window.localStorage.getItem("userName");
+    if (!userName) {
+      alert("Please log in to confirm your purchase.");
+      return;
+    }
+
+    // Add this check
+    if (cart.length === 0) {
+      alert("Your cart is empty. Please add items before confirming purchase.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:4000/cart/confirm-purchase",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userName }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Purchase confirmed!");
+        setCart([]);
+        setTotalCost(0);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error confirming purchase:", error);
+      alert("An error occurred while confirming the purchase");
+    }
+  };
+
   return (
     <div className="cart-page">
       <h1>{name}'s Cart</h1>
@@ -115,7 +155,9 @@ export const Cart = () => {
           <p className="total-cost">Total Cost: ${totalCost}</p>
         </>
       )}
-      <button className="purchase-btn">Confirm purchase</button>
+      <button className="purchase-btn" onClick={confirmPurchase}>
+        Confirm purchase
+      </button>
     </div>
   );
 };

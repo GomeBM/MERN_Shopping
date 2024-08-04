@@ -276,6 +276,7 @@ export const Shop = () => {
         <ProductList
           products={paginatedProducts}
           popUpCheck={handleAddToCart}
+          isHeart={true}
         />
       ) : (
         <p>No products available</p>

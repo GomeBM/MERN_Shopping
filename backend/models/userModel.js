@@ -16,6 +16,31 @@ const cartItemSchema = new Schema({
   },
 });
 
+const wishListSchema = new Schema({
+  product: {
+    type: Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+});
+
+const purchaseHistorySchema = new Schema({
+  date_purchased: { type: Date, default: Date.now },
+  items_purchased: [
+    {
+      product: {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+});
+
 const UserSchema = new Schema(
   {
     username: {
@@ -32,6 +57,8 @@ const UserSchema = new Schema(
       unique: true,
     },
     cart: [cartItemSchema],
+    purchase_history: [purchaseHistorySchema],
+    wishlist: [wishListSchema],
   },
   { timestamps: true }
 );

@@ -92,3 +92,34 @@ exports.getUserCart = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+//CONFIRM PURCHASE OF USER CART:
+exports.confirmPurchase = async (req, res) => {
+  const { userName } = req.body;
+  try {
+    const user = await userModel
+      .findOne({ username: userName })
+      .populate("cart.product");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Create new purchase history entry
+    const newPurchase = {
+      items_purchased: user.cart.map((item) => ({
+        product: item.product._id,
+        quantity: item.quantity,
+      })),
+    };
+
+    // Add to purchase history and clear cart
+    user.purchase_history.push(newPurchase);
+    user.cart = [];
+
+    await user.save();
+
+    res.status(200).json({ message: "Purchase confirmed and cart cleared" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

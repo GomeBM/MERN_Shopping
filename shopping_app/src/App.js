@@ -7,6 +7,7 @@ import { Navbar } from "./components/Navbar";
 import { Shop } from "./pages/shop/Shop";
 import { Cart } from "./pages/cart/Cart";
 import About from "./pages/about/About";
+import Stats from "./components/Stats";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/about" element={<About />} />
+            <Route path="/stats" element={<Stats />} />
           </Routes>
         </div>
       </BrowserRouter>

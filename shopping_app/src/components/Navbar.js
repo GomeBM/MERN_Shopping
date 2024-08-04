@@ -5,8 +5,9 @@ import { useCookies } from "react-cookie";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { BsShop } from "react-icons/bs";
-import { IoLogOutOutline } from "react-icons/io5";
+import { IoLogOutOutline, IoStatsChart } from "react-icons/io5";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import { ReactComponent as Logo } from "../assets/gambashop.svg";
 import "./Navbar.css"; // Import the CSS file for styling
 
 export const Navbar = () => {
@@ -50,7 +51,7 @@ export const Navbar = () => {
   return (
     <div className="navbar">
       <Link to="/">
-        <BsShop className="dropdown-icon" />
+        <Logo width="100%" height="100%" />
       </Link>
       {!cookies.access_token ? (
         <>
@@ -73,6 +74,9 @@ export const Navbar = () => {
             <div className={`user-controls-menu ${isMenuOpen ? "show" : ""}`}>
               <Link to="/cart" onClick={handleMenuItemClick}>
                 <FaShoppingCart className="dropdown-icon" />
+              </Link>
+              <Link to="/stats" onClick={handleMenuItemClick}>
+                <IoStatsChart className="dropdown-icon" />
               </Link>
               <button
                 className="logout-button"
