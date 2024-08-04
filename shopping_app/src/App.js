@@ -8,6 +8,7 @@ import { Shop } from "./pages/shop/Shop";
 import { Cart } from "./pages/cart/Cart";
 import About from "./pages/about/About";
 import Stats from "./components/Stats";
+import Wishlist from "./pages/wishlist/Wishlist";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/about" element={<About />} />
             <Route path="/stats" element={<Stats />} />
+            <Route path="/wishlist" element={<Wishlist />} />
           </Routes>
         </div>
       </BrowserRouter>

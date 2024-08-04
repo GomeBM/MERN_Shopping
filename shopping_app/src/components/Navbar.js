@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { BsShop } from "react-icons/bs";
 import { IoLogOutOutline, IoStatsChart } from "react-icons/io5";
@@ -53,6 +53,9 @@ export const Navbar = () => {
       <Link to="/">
         <Logo width="100%" height="100%" />
       </Link>
+      <Link to="/cart" onClick={handleMenuItemClick}>
+        <FaShoppingCart className="dropdown-icon" />
+      </Link>
       {!cookies.access_token ? (
         <>
           <Link to="/login" className="auth-text">
@@ -72,9 +75,10 @@ export const Navbar = () => {
               <FaRegCircleUser className="dropdown-icon" />
             </button>
             <div className={`user-controls-menu ${isMenuOpen ? "show" : ""}`}>
-              <Link to="/cart" onClick={handleMenuItemClick}>
-                <FaShoppingCart className="dropdown-icon" />
+              <Link to="/wishlist" onClick={handleMenuItemClick}>
+                <FaHeart className="dropdown-icon" />
               </Link>
+
               <Link to="/stats" onClick={handleMenuItemClick}>
                 <IoStatsChart className="dropdown-icon" />
               </Link>

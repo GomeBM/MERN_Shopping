@@ -102,13 +102,46 @@ exports.getPurchaseHistory = async (req, res) => {
   }
 };
 
+// exports.getWishlist = async (req, res) => {
+//   const { userName } = req.params;
+//   console.log(`Attempting to fetch wishlist for user: ${userName}`);
+//   try {
+//     const user = await userModel.findOne({ username: userName }).populate({
+//       path: "wishlist.product",
+//       model: "Product",
+//     });
+
+//     if (!user) {
+//       console.log(`User not found: ${userName}`);
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     console.log(`User found: ${user.username}`);
+//     console.log(`Wishlist items: ${user.wishlist.length}`);
+
+//     // Transform the data to a more frontend-friendly format
+//     const transformedWishlist = user.wishlist.map((item) => ({
+//       productId: item._id,
+//       productName: item.title,
+//       price: item.price,
+//       thumbnail: item.thumbnail,
+//     }));
+
+//     console.log(`Transformed wishlist:`, transformedWishlist);
+//     res.status(200).json({ wishlist: transformedWishlist });
+//   } catch (error) {
+//     console.error(`Error retrieving wishlist for user ${userName}:`, error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 exports.getWishlist = async (req, res) => {
   const { userName } = req.params;
   console.log(`Attempting to fetch wishlist for user: ${userName}`);
   try {
     const user = await userModel.findOne({ username: userName }).populate({
       path: "wishlist.product",
-      model: "Product",
+      select: "title price thumbnail", // Specify which fields to populate
     });
 
     if (!user) {
@@ -116,17 +149,18 @@ exports.getWishlist = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    console.log(`User found: ${user.username}`);
+    console.log(`Wishlist items: ${user.wishlist.length}`);
+
     // Transform the data to a more frontend-friendly format
     const transformedWishlist = user.wishlist.map((item) => ({
-      productId: item.product._id,
+      productId: item.product._id.toString(),
       productName: item.product.title,
       price: item.product.price,
+      thumbnail: item.product.thumbnail,
     }));
 
-    console.log(
-      `Wishlist retrieved for user: ${userName}`,
-      transformedWishlist
-    );
+    console.log(`Transformed wishlist:`, transformedWishlist);
     res.status(200).json({ wishlist: transformedWishlist });
   } catch (error) {
     console.error(`Error retrieving wishlist for user ${userName}:`, error);

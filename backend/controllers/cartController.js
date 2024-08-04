@@ -123,3 +123,35 @@ exports.confirmPurchase = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// In your controllers/cartController.js
+exports.confirmPurchaseWithEmail = async (req, res) => {
+  const { email, cart } = req.body;
+
+  try {
+    // Check if the user exists
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Create new purchase history entry
+    const newPurchase = {
+      items_purchased: cart.map((item) => ({
+        product: item.productId,
+        quantity: item.quantity,
+      })),
+    };
+
+    // Add to purchase history and clear dummy cart
+    user.purchase_history.push(newPurchase);
+    await user.save();
+
+    // Clear the dummy cart for the user
+    // If you need to clear it from the database, you might want to add more logic here
+
+    res.status(200).json({ message: "Purchase confirmed and cart cleared" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

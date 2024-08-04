@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import ProductList from "../../components/ProductList";
 import Popup from "../../components/Popup";
+import { ReactComponent as Logo } from "../../assets/gambashop.svg";
 import "./Shop.css";
 
 export const Shop = () => {
@@ -102,20 +103,11 @@ export const Shop = () => {
   };
 
   const handleAddToCart = (product) => {
-    const userName = window.localStorage.getItem("userName");
-    if (!userName) {
-      setShowPopup({
-        show: true,
-        message: "Please log in to add items to your cart",
-        productImage: null,
-      });
-    } else {
-      setShowPopup({
-        show: true,
-        message: `${product.title} has been added to your cart`,
-        productImage: product.thumbnail,
-      });
-    }
+    setShowPopup({
+      show: true,
+      message: `${product.title} has been added to your cart`,
+      productImage: product.thumbnail,
+    });
   };
 
   const clearFilters = () => {
@@ -146,14 +138,13 @@ export const Shop = () => {
 
   return (
     <div className="shop">
-      <h1>The Gambashop!</h1>
       <div className="shop-title">
         {loading ? (
           <h1>Loading</h1>
         ) : cookies.access_token ? (
           <h1>Hello {userName}</h1>
         ) : (
-          <h3>Please log in to view your cart</h3>
+          <h3>Please log in to view account spesific details</h3>
         )}
       </div>
 

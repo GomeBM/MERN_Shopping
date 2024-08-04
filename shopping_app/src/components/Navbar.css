@@ -49,7 +49,7 @@
 
 .user-controls-menu {
   position: absolute;
-  top: 10%; /* Aligns the menu to the top of the navbar */
+  bottom: 1%; /* Aligns the menu to the top of the navbar */
   left: 113%; /* Positions the menu to the right of the navbar */
   background-color: #5b5a5a; /* Same color as the navbar */
   border-radius: 8px;
