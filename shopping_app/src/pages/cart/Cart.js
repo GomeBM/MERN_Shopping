@@ -114,7 +114,6 @@ export const Cart = () => {
   const confirmPurchase = async () => {
     const userName = window.localStorage.getItem("userName");
     if (!userName) {
-      // Prompt for email if not logged in
       setEmailPrompt(true);
       return;
     }
@@ -139,11 +138,13 @@ export const Cart = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Purchase confirmed!");
+        alert(data.message || "Purchase confirmed!");
         setCart([]);
         setTotalCost(0);
       } else {
-        alert(data.message);
+        alert(
+          data.message || "An error occurred while confirming the purchase"
+        );
       }
     } catch (error) {
       console.error("Error confirming purchase:", error);
@@ -172,14 +173,16 @@ export const Cart = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Purchase confirmed!");
+        alert(data.message || "Purchase confirmed!");
         setCart([]);
         setTotalCost(0);
-        localStorage.removeItem("dummyCart"); // Clear dummy cart
-        setEmail(""); // Reset email input
-        setEmailPrompt(false); // Hide email prompt
+        localStorage.removeItem("dummyCart");
+        setEmail("");
+        setEmailPrompt(false);
       } else {
-        alert(data.message);
+        alert(
+          data.message || "An error occurred while confirming the purchase"
+        );
       }
     } catch (error) {
       console.error("Error confirming purchase:", error);

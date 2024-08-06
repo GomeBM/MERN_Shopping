@@ -1,6 +1,12 @@
 const userModel = require("../models/userModel");
 const productModel = require("../models/productModel");
-const { sendEmail } = require("../mailer");
+const emailjs = require("@emailjs/nodejs");
+require("dotenv").config();
+
+emailjs.init({
+  publicKey: process.env.EMAIL_PUBLIC_KEY,
+  privateKey: process.env.EMAIL_PRIVATE_KEY,
+});
 
 // Add item to cart
 exports.addToCart = async (req, res) => {
@@ -115,76 +121,85 @@ exports.confirmPurchase = async (req, res) => {
 
     // Add to purchase history and clear cart
     user.purchase_history.push(newPurchase);
-    user.cart = [];
-
-    await user.save();
 
     // Prepare email content
-    const emailContent = user.cart
+    const purchaseDetails = user.cart
       .map(
-        (item) => `Product: ${item.product.name}, Quantity: ${item.quantity}`
+        (item) =>
+          `${item.product.title} - Quantity: ${item.quantity} - Price: $${(
+            item.product.price * item.quantity
+          ).toFixed(2)}`
       )
       .join("\n");
 
-    const emailSubject = "Purchase Confirmation";
-    const emailText = `Thank you for your purchase!\n\nYou have bought:\n${emailContent}`;
+    const totalCost = user.cart
+      .reduce((total, item) => total + item.product.price * item.quantity, 0)
+      .toFixed(2);
 
-    // Send email
-    await sendEmail(user.email, emailSubject, emailText);
+    // Send email using EmailJS
+    await emailjs.send(
+      process.env.EMAIL_SERVICE_ID,
+      process.env.EMAIL_TEMPLATE_ID,
+      {
+        to_name: user.username,
+        to_email: user.email,
+        purchases: purchaseDetails,
+        total: totalCost,
+      }
+    );
 
-    res.status(200).json({ message: "Purchase confirmed and cart cleared" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// In your controllers/cartController.js
-exports.confirmPurchaseWithEmail = async (req, res) => {
-  const { email, cart } = req.body;
-
-  try {
-    // Check if the user exists
-    const user = await userModel.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Create new purchase history entry
-    const newPurchase = {
-      items_purchased: cart.map((item) => ({
-        product: item.productId,
-        quantity: item.quantity,
-      })),
-    };
-
-    // Add to purchase history and clear dummy cart
-    user.purchase_history.push(newPurchase);
+    user.cart = [];
     await user.save();
-
-    // Prepare email content
-    const emailContent = cart
-      .map((item) => `Product: ${item.productId}, Quantity: ${item.quantity}`)
-      .join("\n");
-
-    const emailSubject = "Purchase Confirmation";
-    const emailText = `Thank you for your purchase!\n\nYou have bought:\n${emailContent}`;
-
-    // Send email
-    const emailResponse = await sendEmail(user.email, emailSubject, emailText);
-
-    // Log the response for debugging
-    console.log("Email sent successfully:", emailResponse);
-
-    // Clear the dummy cart (if you use a localStorage-based dummy cart, you might handle it differently)
-    // Example: await clearDummyCart(email);
 
     res
       .status(200)
       .json({ message: "Purchase confirmed, cart cleared, and email sent" });
   } catch (error) {
-    // Log the error for debugging
-    console.error("Error confirming purchase with email:", error);
+    console.error("Error in confirmPurchaseWithEmail:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while processing your purchase" });
+  }
+};
 
-    res.status(500).json({ message: error.message });
+//CONFIRM PURCHASE FOR NON LOGGED IN USERS
+exports.confirmPurchaseWithEmail = async (req, res) => {
+  const { email, cart } = req.body;
+
+  try {
+    // Prepare email content
+    const purchaseDetails = cart
+      .map(
+        (item) =>
+          `${item.title} - Quantity: ${item.quantity} - Price: $${(
+            item.price * item.quantity
+          ).toFixed(2)}`
+      )
+      .join("\n");
+
+    const totalCost = cart
+      .reduce((total, item) => total + item.price * item.quantity, 0)
+      .toFixed(2);
+
+    // Send email using EmailJS
+    await emailjs.send(
+      process.env.EMAIL_SERVICE_ID,
+      process.env.EMAIL_TEMPLATE_ID,
+      {
+        to_name: "Valued Customer",
+        to_email: email,
+        purchases: purchaseDetails,
+        total: totalCost,
+      }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Purchase confirmed, cart cleared, and email sent" });
+  } catch (error) {
+    console.error("Error in confirmPurchase:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while processing your purchase" });
   }
 };
