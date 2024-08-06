@@ -1,5 +1,6 @@
 # Ignore .env file in backend folder
 backend/.env
+shopping_app/.env
 
 # Other files you want to ignore
 .DS_Store
