@@ -61,7 +61,7 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      <h1>Contact Us</h1>
+      <h1>Fill out the form bellow in order to contact us</h1>
       <form className="contact-form" onSubmit={handleSubmit}>
         <label htmlFor="fullName">Full Name:</label>
         <input
@@ -73,7 +73,7 @@ const Contact = () => {
           required
         />
 
-        <label htmlFor="email">E-mail:</label>
+        <label htmlFor="email">E-mail adress:</label>
         <input
           type="email"
           id="email"

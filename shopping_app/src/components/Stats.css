@@ -1,0 +1,42 @@
+.stats-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+.metric-selector {
+  margin-bottom: 20px;
+}
+
+.metric-selector label {
+  margin-right: 10px;
+}
+
+.charts-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.chart-container {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.chart-title {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+/* Additional styling for the charts */
+.chart-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container canvas {
+  max-width: 100%;
+  height: auto;
+}
