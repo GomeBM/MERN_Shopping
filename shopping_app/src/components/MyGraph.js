@@ -5,9 +5,9 @@ import {
   Tooltip,
   Legend,
   BarElement,
-  ArcElement, // Use ArcElement for Pie charts
+  ArcElement,
   LineElement,
-  PointElement, // For Line charts
+  PointElement,
   CategoryScale,
   LinearScale,
 } from "chart.js";
@@ -19,9 +19,9 @@ ChartJS.register(
   Tooltip,
   Legend,
   BarElement,
-  ArcElement, // Register ArcElement for Pie charts
+  ArcElement,
   LineElement,
-  PointElement, // Register PointElement for Line charts
+  PointElement,
   CategoryScale,
   LinearScale
 );
@@ -37,7 +37,7 @@ const MyGraph = ({ type, data, labels, options }) => {
           () =>
             `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
               Math.random() * 255
-            )}, ${Math.floor(Math.random() * 255)}, 0.6)`
+            )}, ${Math.floor(Math.random() * 255)}, 0.9)`
         ),
       },
     ],

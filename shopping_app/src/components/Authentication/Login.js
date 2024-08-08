@@ -31,6 +31,7 @@ const Login = () => {
       if (data.success) {
         setCookies("access_token", data.token);
         window.localStorage.setItem("userName", data.name);
+        window.localStorage.setItem("userEmail", data.email);
         console.log(data.user);
         navigate("/");
       } else {

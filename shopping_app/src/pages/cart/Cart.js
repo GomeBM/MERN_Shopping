@@ -11,10 +11,11 @@ export const Cart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       const userName = window.localStorage.getItem("userName");
+      const userEmail = window.localStorage.getItem("userEmail");
       if (userName) {
         try {
           const response = await fetch(
-            `http://localhost:4000/cart/${userName}`
+            `http://localhost:4000/cart/${userEmail}`
           );
           const data = await response.json();
           if (response.ok) {
@@ -62,6 +63,7 @@ export const Cart = () => {
 
   const removeItemFromCart = async (productId) => {
     const userName = window.localStorage.getItem("userName");
+    const userEmail = window.localStorage.getItem("userEmail");
 
     if (!userName) {
       // Update dummy cart when no user is logged in
@@ -81,7 +83,7 @@ export const Cart = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userName,
+          userEmail,
           product: {
             _id: productId,
           },
@@ -113,6 +115,7 @@ export const Cart = () => {
 
   const confirmPurchase = async () => {
     const userName = window.localStorage.getItem("userName");
+    const userEmail = window.localStorage.getItem("userEmail");
     if (!userName) {
       setEmailPrompt(true);
       return;
@@ -131,7 +134,7 @@ export const Cart = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userName }),
+          body: JSON.stringify({ userEmail }),
         }
       );
 

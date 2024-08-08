@@ -10,13 +10,13 @@ emailjs.init({
 
 // Add item to cart
 exports.addToCart = async (req, res) => {
-  const { userName, productId } = req.body;
+  const { userEmail, productId } = req.body;
   console.log("Received add to cart request:", req.body);
 
   try {
-    const user = await userModel.findOne({ username: userName });
+    const user = await userModel.findOne({ email: userEmail });
     if (!user) {
-      console.log("User not found:", userName);
+      console.log("User not found:", userEmail);
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -46,8 +46,8 @@ exports.addToCart = async (req, res) => {
 };
 
 exports.removeFromCart = async (req, res) => {
-  const { userName, product } = req.body;
-  if (!userName || !product || !product._id) {
+  const { userEmail, product } = req.body;
+  if (!userEmail || !product || !product._id) {
     return res
       .status(400)
       .json({ error: "userName and product._id are required" });
@@ -55,7 +55,7 @@ exports.removeFromCart = async (req, res) => {
 
   try {
     // Find the user by userName
-    const user = await userModel.findOne({ username: userName });
+    const user = await userModel.findOne({ email: userEmail });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -79,16 +79,16 @@ exports.removeFromCart = async (req, res) => {
 
 //Get user's cart
 exports.getUserCart = async (req, res) => {
-  const { userName } = req.params;
-  console.log("Received get cart request for user:", userName);
+  const { userEmail } = req.params;
+  console.log("Received get cart request for user:", userEmail);
 
   try {
     const user = await userModel
-      .findOne({ username: userName })
+      .findOne({ email: userEmail })
       .populate("cart.product");
 
     if (!user) {
-      console.log("User not found:", userName);
+      console.log("User not found:", userEmail);
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -100,146 +100,12 @@ exports.getUserCart = async (req, res) => {
   }
 };
 
-//CONFIRM PURCHASE OF USER CART:
-// exports.confirmPurchase = async (req, res) => {
-//   const { userName } = req.body;
-//   try {
-//     const user = await userModel
-//       .findOne({ username: userName })
-//       .populate("cart.product");
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Create new purchase history entry
-//     const newPurchase = {
-//       items_purchased: user.cart.map((item) => ({
-//         product: item.product._id,
-//         quantity: item.quantity,
-//         category: item.category,//this line does not work.
-//       })),
-//     };
-
-//     // Add to purchase history and clear cart
-//     user.purchase_history.push(newPurchase);
-
-//     // Prepare email content
-//     const purchaseDetails = user.cart
-//       .map(
-//         (item) =>
-//           `${item.product.title} - Quantity: ${item.quantity} - Price: $${(
-//             item.product.price * item.quantity
-//           ).toFixed(2)}`
-//       )
-//       .join("\n");
-
-//     const totalCost = user.cart
-//       .reduce((total, item) => total + item.product.price * item.quantity, 0)
-//       .toFixed(2);
-
-//     // Send email using EmailJS
-//     await emailjs.send(
-//       process.env.EMAIL_SERVICE_ID,
-//       process.env.EMAIL_TEMPLATE_ID,
-//       {
-//         to_name: user.username,
-//         to_email: user.email,
-//         purchases: purchaseDetails,
-//         total: totalCost,
-//       }
-//     );
-
-//     user.cart = [];
-//     await user.save();
-
-//     res
-//       .status(200)
-//       .json({ message: "Purchase confirmed, cart cleared, and email sent" });
-//   } catch (error) {
-//     console.error("Error in confirmPurchaseWithEmail:", error);
-//     res
-//       .status(500)
-//       .json({ message: "An error occurred while processing your purchase" });
-//   }
-// };
-
-// exports.confirmPurchase = async (req, res) => {
-//   const { userName } = req.body;
-
-//   try {
-//     const user = await userModel
-//       .findOne({ username: userName })
-//       .populate("cart.product");
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Create an array to hold detailed purchase items
-//     const purchaseItems = await Promise.all(
-//       user.cart.map(async (item) => {
-//         const product = await productModel.findById(item.product._id);
-//         return {
-//           product: item.product._id,
-//           quantity: item.quantity,
-//           category: product.category, // Get the category from the product
-//         };
-//       })
-//     );
-
-//     // Create new purchase history entry
-//     const newPurchase = {
-//       items_purchased: purchaseItems,
-//     };
-
-//     // Add to purchase history and clear cart
-//     user.purchase_history.push(newPurchase);
-
-//     // Prepare email content
-//     const purchaseDetails = user.cart
-//       .map(
-//         (item) =>
-//           `${item.product.title} - Quantity: ${item.quantity} - Price: $${(
-//             item.product.price * item.quantity
-//           ).toFixed(2)}`
-//       )
-//       .join("\n");
-
-//     const totalCost = user.cart
-//       .reduce((total, item) => total + item.product.price * item.quantity, 0)
-//       .toFixed(2);
-
-//     // Send email using EmailJS
-//     await emailjs.send(
-//       process.env.EMAIL_SERVICE_ID,
-//       process.env.EMAIL_TEMPLATE_ID,
-//       {
-//         to_name: user.username,
-//         to_email: user.email,
-//         purchases: purchaseDetails,
-//         total: totalCost,
-//       }
-//     );
-
-//     user.cart = [];
-//     await user.save();
-
-//     res
-//       .status(200)
-//       .json({ message: "Purchase confirmed, cart cleared, and email sent" });
-//   } catch (error) {
-//     console.error("Error in confirmPurchaseWithEmail:", error);
-//     res
-//       .status(500)
-//       .json({ message: "An error occurred while processing your purchase" });
-//   }
-// };
 // CONFIRM PURCHASE OF USER CART:
 exports.confirmPurchase = async (req, res) => {
-  const { userName } = req.body;
+  const { userEmail } = req.body;
   try {
     const user = await userModel
-      .findOne({ username: userName })
+      .findOne({ email: userEmail })
       .populate("cart.product");
     if (!user) {
       return res.status(404).json({ message: "User not found" });

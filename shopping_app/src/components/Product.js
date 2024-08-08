@@ -20,6 +20,7 @@ const Product = ({
 
   const toggleWishlist = async () => {
     const userName = window.localStorage.getItem("userName");
+    const userEmail = window.localStorage.getItem("userEmail");
     if (!userName) {
       popUpCheckLiked();
     }
@@ -28,14 +29,14 @@ const Product = ({
 
     try {
       const response = await fetch(
-        `http://localhost:4000/auth/${userName}/add-to-wishlist`,
+        `http://localhost:4000/auth/${userEmail}/add-to-wishlist`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userName,
+            userEmail,
             productId,
           }),
         }
@@ -66,6 +67,7 @@ const Product = ({
 
   const addToCart = async () => {
     const userName = window.localStorage.getItem("userName");
+    const userEmail = window.localStorage.getItem("userEmail");
     if (userName) {
       const productId = product._id ? product._id.toString() : "";
 
@@ -76,7 +78,7 @@ const Product = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userName,
+            userEmail,
             productId,
           }),
         });

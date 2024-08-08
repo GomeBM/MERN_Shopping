@@ -42,11 +42,12 @@ export const Shop = () => {
 
   const fetchWishlist = async () => {
     const userName = window.localStorage.getItem("userName");
-    if (!userName) return;
+    const userEmail = window.localStorage.getItem("userEmail");
+    if (!userEmail) return;
 
     try {
       const response = await fetch(
-        `http://localhost:4000/auth/${userName}/get-wishlist`
+        `http://localhost:4000/auth/${userEmail}/get-wishlist`
       );
       if (response.ok) {
         const data = await response.json();

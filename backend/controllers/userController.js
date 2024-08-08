@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const productModel = require("../models/productModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
 
 //GET a single user
 exports.getUser = async (req, res) => {
@@ -34,6 +35,7 @@ exports.getUser = async (req, res) => {
       success: true,
       message: "Login successful",
       name: user.username,
+      email: user.email,
       token,
     });
   } catch (error) {
@@ -66,54 +68,18 @@ exports.createUser = async (req, res) => {
   }
 };
 
-//GET a users search history:
-// exports.getPurchaseHistory = async (req, res) => {
-//   const { userName } = req.params;
-//   try {
-//     const user = await userModel.findOne({ username: userName }).populate({
-//       path: "purchase_history.items_purchased.product",
-//       model: "Product",
-//     });
-
-//     if (!user) {
-//       console.log(`User not found: ${userName}`);
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Transform the data to a more frontend-friendly format
-//     const transformedHistory = user.purchase_history.map((purchase) => ({
-//       date: purchase.date_purchased,
-//       items: purchase.items_purchased.map((item) => ({
-//         productId: item.product._id,
-//         productName: item.product.title, // Assuming your product has a 'title' field
-//         quantity: item.quantity,
-//         price: item.product.price, // Assuming your product has a 'price' field
-
-//       })),
-//     }));
-
-//     console.log(`Purchase history retrieved for user: ${userName}`);
-//     res.status(200).json({ purchaseHistory: transformedHistory });
-//   } catch (error) {
-//     console.error(
-//       `Error retrieving purchase history for user ${userName}:`,
-//       error
-//     );
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 //GET a user's purchase history:
 exports.getPurchaseHistory = async (req, res) => {
-  const { userName } = req.params;
+  const { userEmail } = req.params;
   try {
-    const user = await userModel.findOne({ username: userName }).populate({
+    const user = await userModel.findOne({ email: userEmail }).populate({
       path: "purchase_history.items_purchased.product",
       model: "Product",
       select: "title price category", // Specify the fields to populate
     });
 
     if (!user) {
-      console.log(`User not found: ${userName}`);
+      console.log(`User not found: ${userEmail}`);
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -129,11 +95,11 @@ exports.getPurchaseHistory = async (req, res) => {
       })),
     }));
 
-    console.log(`Purchase history retrieved for user: ${userName}`);
+    console.log(`Purchase history retrieved for user: ${userEmail}`);
     res.status(200).json({ purchaseHistory: transformedHistory });
   } catch (error) {
     console.error(
-      `Error retrieving purchase history for user ${userName}:`,
+      `Error retrieving purchase history for user ${userEmail}:`,
       error
     );
     res.status(500).json({ message: error.message });
@@ -141,20 +107,20 @@ exports.getPurchaseHistory = async (req, res) => {
 };
 
 exports.getWishlist = async (req, res) => {
-  const { userName } = req.params;
-  console.log(`Attempting to fetch wishlist for user: ${userName}`);
+  const { userEmail } = req.params;
+  console.log(`Attempting to fetch wishlist for user: ${userEmail}`);
   try {
-    const user = await userModel.findOne({ username: userName }).populate({
+    const user = await userModel.findOne({ email: userEmail }).populate({
       path: "wishlist.product",
       select: "title price thumbnail", // Specify which fields to populate
     });
 
     if (!user) {
-      console.log(`User not found: ${userName}`);
+      console.log(`User not found: ${userEmail}`);
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log(`User found: ${user.username}`);
+    console.log(`User found: ${user.email}`);
     console.log(`Wishlist items: ${user.wishlist.length}`);
 
     // Transform the data to a more frontend-friendly format
@@ -168,18 +134,18 @@ exports.getWishlist = async (req, res) => {
     console.log(`Transformed wishlist:`, transformedWishlist);
     res.status(200).json({ wishlist: transformedWishlist });
   } catch (error) {
-    console.error(`Error retrieving wishlist for user ${userName}:`, error);
+    console.error(`Error retrieving wishlist for user ${userEmail}:`, error);
     res.status(500).json({ message: error.message });
   }
 };
 
 exports.addToWishlist = async (req, res) => {
-  const { userName, productId } = req.body;
+  const { userEmail, productId } = req.body;
   console.log("Received add to wishlist request:", req.body);
   try {
-    const user = await userModel.findOne({ username: userName });
+    const user = await userModel.findOne({ email: userEmail });
     if (!user) {
-      console.log("User not found:", userName);
+      console.log("User not found:", userEmail);
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -197,13 +163,13 @@ exports.addToWishlist = async (req, res) => {
       // Add to wishlist if not already there
       user.wishlist.push({ product: productId });
       console.log(
-        `Added product ${productId} to wishlist for user ${userName}`
+        `Added product ${productId} to wishlist for user ${userEmail}`
       );
     } else {
       // Remove from wishlist if already there
       user.wishlist.splice(wishListItemIndex, 1);
       console.log(
-        `Removed product ${productId} from wishlist for user ${userName}`
+        `Removed product ${productId} from wishlist for user ${userEmail}`
       );
     }
 

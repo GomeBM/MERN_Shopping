@@ -14,11 +14,12 @@ const Stats = () => {
 
   const fetchUserPurchaseHistory = async () => {
     const storedUserName = window.localStorage.getItem("userName");
+    const userEmail = window.localStorage.getItem("userEmail");
     if (storedUserName) {
       setUserName(storedUserName);
       try {
         const response = await fetch(
-          `http://localhost:4000/auth/${storedUserName}/purchase-history`
+          `http://localhost:4000/auth/${userEmail}/purchase-history`
         );
         const data = await response.json();
         if (response.ok) {
@@ -37,32 +38,65 @@ const Stats = () => {
   };
 
   const processChartData = (purchaseHistory) => {
-    const metrics = ["price", "quantity"];
+    const metrics = ["price", "quantity", "yearly-spent"];
     const newChartData = {};
 
     metrics.forEach((metric) => {
       const categoryTotals = {};
+      const monthlyTotals = Array(12).fill(0); // Array to store monthly totals
 
       purchaseHistory.forEach((purchase) => {
+        const purchaseDate = new Date(purchase.date);
+        const month = purchaseDate.getMonth(); // 0-based month (0 = January, 11 = December)
+        const year = purchaseDate.getFullYear();
+
         purchase.items.forEach((item) => {
           const value =
             metric === "price" ? item.price * item.quantity : item.quantity;
 
-          if (categoryTotals[item.category]) {
-            categoryTotals[item.category] += value;
+          if (metric === "yearly-spent") {
+            if (
+              purchaseDate >=
+              new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+            ) {
+              monthlyTotals[month] += item.price * item.quantity; // Sum up monthly totals
+            }
           } else {
-            categoryTotals[item.category] = value;
+            if (categoryTotals[item.category]) {
+              categoryTotals[item.category] += value;
+            } else {
+              categoryTotals[item.category] = value;
+            }
           }
         });
       });
 
-      const labels = Object.keys(categoryTotals);
-      const data = Object.values(categoryTotals);
-
-      newChartData[metric] = {
-        labels,
-        data,
-      };
+      if (metric === "yearly-spent") {
+        newChartData[metric] = {
+          labels: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
+          data: monthlyTotals,
+        };
+      } else {
+        const labels = Object.keys(categoryTotals);
+        const data = Object.values(categoryTotals);
+        newChartData[metric] = {
+          labels,
+          data,
+        };
+      }
     });
 
     setChartData(newChartData);
@@ -70,7 +104,7 @@ const Stats = () => {
 
   useEffect(() => {
     fetchUserPurchaseHistory();
-  }, [metric]); // Add metric to dependency array to update when metric changes
+  }, [metric]);
 
   const handleMetricChange = (event) => {
     setMetric(event.target.value);
@@ -78,12 +112,13 @@ const Stats = () => {
 
   return (
     <div className="stats-container">
-      <h1>Purchase History</h1>
+      <h1>Here's {userName}'s shopping data</h1>
       <div className="metric-selector">
         <label htmlFor="metric">Select Metric: </label>
         <select id="metric" value={metric} onChange={handleMetricChange}>
           <option value="price">Total Price</option>
           <option value="quantity">Total Quantity</option>
+          <option value="yearly-spent">Yearly Spent</option>
         </select>
       </div>
       {purchaseHistory.length === 0 ? (
@@ -93,8 +128,10 @@ const Stats = () => {
           <div className="chart-container">
             <h2 className="chart-title">
               {metric === "price"
-                ? "Total Price per Category"
-                : "Total Quantity per Category"}
+                ? "Total $ spent per category"
+                : metric === "quantity"
+                ? "Total amount of products purchased per category"
+                : "Total $ spent per month over the past year"}
             </h2>
             <MyGraph
               type="bar"
@@ -116,8 +153,10 @@ const Stats = () => {
           <div className="chart-container">
             <h2 className="chart-title">
               {metric === "price"
-                ? "Total Price per Category"
-                : "Total Quantity per Category"}
+                ? "Total $ spent per category"
+                : metric === "quantity"
+                ? "Total amount of products purchased per category"
+                : "Total $ spent per month over the past year"}
             </h2>
             <MyGraph
               type="pie"
@@ -143,8 +182,10 @@ const Stats = () => {
           <div className="chart-container">
             <h2 className="chart-title">
               {metric === "price"
-                ? "Total Price per Category"
-                : "Total Quantity per Category"}
+                ? "Total $ spent per category"
+                : metric === "quantity"
+                ? "Total amount of products purchased per category"
+                : "Total $ spent per month over the past year"}
             </h2>
             <MyGraph
               type="line"
