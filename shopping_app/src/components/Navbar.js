@@ -1,32 +1,33 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
-import { BsShop } from "react-icons/bs";
 import { IoLogOutOutline, IoStatsChart } from "react-icons/io5";
-import { IoMdInformationCircleOutline } from "react-icons/io";
+import {
+  IoMdInformationCircleOutline,
+  IoMdAddCircleOutline,
+} from "react-icons/io";
+import { GrUpdate } from "react-icons/gr";
 import { ReactComponent as Logo } from "../assets/gambashop.svg";
-import "./Navbar.css"; // Import the CSS file for styling
+import "./Navbar.css";
 
-export const Navbar = () => {
-  const [cookies, setCookies] = useCookies(["access_token"]);
+export const Navbar = ({ userEmail, isUserAdmin, updateUserState }) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isInfoMenuOpen, setIsInfoMenuOpen] = useState(false); // New state for the info menu
+  const [isInfoMenuOpen, setIsInfoMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const userMenuRef = useRef(null); // Ref for the user menu
-  const infoMenuRef = useRef(null); // Ref for the info menu
+  const userMenuRef = useRef(null);
+  const infoMenuRef = useRef(null);
 
   const handleLogout = () => {
-    setCookies("access_token", "");
     window.localStorage.removeItem("userName");
     window.localStorage.removeItem("userEmail");
-    navigate("/"); // Navigate to home page
-    window.location.reload(); // Reload the page
+    window.localStorage.removeItem("isAdmin");
+    updateUserState(null, false);
+    navigate("/");
+    window.location.reload();
   };
 
-  // Handle click outside to close the user menu
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -36,26 +37,17 @@ export const Navbar = () => {
         !infoMenuRef.current.contains(event.target)
       ) {
         setIsUserMenuOpen(false);
-        setIsInfoMenuOpen(false); // Close info menu when clicking outside
+        setIsInfoMenuOpen(false);
       }
     };
 
-    // Add event listener when menus are open
-    if (isUserMenuOpen || isInfoMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    // Cleanup event listener on component unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isUserMenuOpen, isInfoMenuOpen]);
 
   const handleMenuItemClick = () => {
-    setIsUserMenuOpen(false); // Close the user menu when a menu item is clicked
-    setIsInfoMenuOpen(false); // Close the info menu when a menu item is clicked
+    setIsUserMenuOpen(false);
+    setIsInfoMenuOpen(false);
   };
 
   return (
@@ -66,7 +58,7 @@ export const Navbar = () => {
       <Link to="/cart" onClick={handleMenuItemClick}>
         <FaShoppingCart className="dropdown-icon" />
       </Link>
-      {!cookies.access_token ? (
+      {!userEmail ? (
         <>
           <Link to="/login" className="auth-text">
             Login
@@ -87,9 +79,21 @@ export const Navbar = () => {
             <div
               className={`user-controls-menu ${isUserMenuOpen ? "show" : ""}`}
             >
-              <Link to="/wishlist" onClick={handleMenuItemClick}>
-                <FaHeart className="dropdown-icon" />
-              </Link>
+              {!isUserAdmin && (
+                <Link to="/wishlist" onClick={handleMenuItemClick}>
+                  <FaHeart className="dropdown-icon" />
+                </Link>
+              )}
+              {isUserAdmin && (
+                <Link to="/add-product" onClick={handleMenuItemClick}>
+                  <IoMdAddCircleOutline className="dropdown-icon" />
+                </Link>
+              )}
+              {isUserAdmin && (
+                <Link to="/update-product" onClick={handleMenuItemClick}>
+                  <GrUpdate className="dropdown-icon" />
+                </Link>
+              )}
               <Link to="/stats" onClick={handleMenuItemClick}>
                 <IoStatsChart className="dropdown-icon" />
               </Link>

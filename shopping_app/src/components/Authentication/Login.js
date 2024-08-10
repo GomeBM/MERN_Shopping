@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import "./Authentication.css";
 
-const Login = () => {
+const Login = ({ updateUserState }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -29,10 +29,10 @@ const Login = () => {
       }
 
       if (data.success) {
-        setCookies("access_token", data.token);
         window.localStorage.setItem("userName", data.name);
         window.localStorage.setItem("userEmail", data.email);
-        console.log(data.user);
+        window.localStorage.setItem("isAdmin", data.isAdmin);
+        updateUserState(data.email, data.isAdmin);
         navigate("/");
       } else {
         setError(data.message);

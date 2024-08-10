@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
+import { GrEdit } from "react-icons/gr";
 import "./Product.css";
 
 const Product = ({
   product,
   popUpCheck,
+  isHeart,
   wishlist,
   updateWishlist,
   popUpCheckLiked,
+  isAdmin,
 }) => {
+  console.log("Is admin in Product:", isAdmin); // Add this line
   const [wishListed, setWishListed] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const isWishListed = wishlist.some(
       (item) => item.productId.toString() === product._id.toString()
     );
     setWishListed(isWishListed);
-  }, [wishlist, product._id]);
+  }, [wishlist, product._id, isAdmin]);
 
   const toggleWishlist = async () => {
     const userName = window.localStorage.getItem("userName");
@@ -126,6 +132,11 @@ const Product = ({
     addToCart();
   };
 
+  const handleEditProduct = () => {
+    window.localStorage.setItem("productName", product.title);
+    navigate("/update-product");
+  };
+
   return (
     <div className="product">
       {product.title && <h2>{product.title}</h2>}
@@ -135,13 +146,22 @@ const Product = ({
       {product.rating && <p>Rating: {product.rating}</p>}
       {product.description && <p>{product.description}</p>}
       {product.price && <p>Price: ${product.price}</p>}
-      <button className="add-to-cart-btn" onClick={handleAddToCartClick}>
-        Add to Cart
-      </button>
-      <FaHeart
-        className={`wishlist-icon ${wishListed ? "wishlisted" : ""}`}
-        onClick={toggleWishlist}
-      />
+      {!isAdmin && (
+        <button className="add-to-cart-btn" onClick={handleAddToCartClick}>
+          Add to Cart
+        </button>
+      )}
+      {!isAdmin && (
+        <FaHeart
+          className={`wishlist-icon ${wishListed ? "wishlisted" : ""}`}
+          onClick={toggleWishlist}
+        />
+      )}
+      {isAdmin && (
+        <button className="add-to-cart-btn" onClick={handleEditProduct}>
+          Edit product details
+        </button>
+      )}
     </div>
   );
 };

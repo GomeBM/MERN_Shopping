@@ -10,6 +10,7 @@ exports.getUser = async (req, res) => {
   if (!password || !email) {
     res.json({ success: false, message: "Please fill in all fields" });
   }
+  const isAdmin = email === "gambashop120@gmail.com" ? true : false;
   try {
     const user = await userModel.findOne({ email });
 
@@ -36,6 +37,7 @@ exports.getUser = async (req, res) => {
       message: "Login successful",
       name: user.username,
       email: user.email,
+      isAdmin,
       token,
     });
   } catch (error) {

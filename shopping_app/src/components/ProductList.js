@@ -5,11 +5,14 @@ import "./ProductList.css";
 const ProductList = ({
   products,
   popUpCheck,
+  isHeart,
   wishlist,
   updateWishlist,
   popUpCheckLiked,
+  isAdmin,
 }) => {
-  console.log("Products received:", products); // Log products to check their value
+  console.log("Is admin in ProductList:", isAdmin); // Add this line
+  console.log("Products received:", products);
 
   return (
     <div className="product-list">
@@ -19,10 +22,11 @@ const ProductList = ({
             key={product.id}
             product={product}
             popUpCheck={popUpCheck}
-            isHeart={true}
+            isHeart={isHeart}
             wishlist={wishlist}
             updateWishlist={updateWishlist}
             popUpCheckLiked={popUpCheckLiked}
+            isAdmin={isAdmin}
           />
         ))
       ) : (

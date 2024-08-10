@@ -13,8 +13,12 @@ router.get("/productsDB", productController.getAllProductsFromDB);
 router.get("/:category", productController.getProductByCategory);
 
 //GET PRODUCT BY ID:
-router.get("/:id", productController.getProductById);
+router.post("/get-by-name", productController.getProductByName);
 
-//GET PRODUCTS BASED ON FILTERS
+router.post("/add-product", productController.addProduct);
+
+router.put("/update-product", productController.updateProduct);
+
+router.put("delete-product", productController.deleteProduct);
 
 module.exports = router;

@@ -6,9 +6,8 @@ import { ReactComponent as Logo } from "../../assets/gambashop.svg";
 import "./Shop.css";
 
 export const Shop = () => {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cookies, setCookies] = useCookies(["access_token"]);
   const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -27,21 +26,27 @@ export const Shop = () => {
   const [showCategoriesFilter, setShowCategoriesFilter] = useState(false);
   const [showSearchFilter, setShowSearchFilter] = useState(false); // New state for search filter visibility
   const [wishlist, setWishlist] = useState([]);
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
+  const [isHeart, setIsHeart] = useState(false);
   const limit = 9;
 
   useEffect(() => {
-    if (cookies.access_token) {
-      const storedUserName = window.localStorage.getItem("userName");
-      if (storedUserName) {
-        setUserName(storedUserName);
-      }
+    const storedUserName = window.localStorage.getItem("userName");
+    if (storedUserName) {
+      setIsUserAdmin(window.localStorage.getItem("isAdmin") === "true");
+      setUserName(storedUserName);
+      setIsHeart(true); // Fixed typo here
+      fetchWishlist();
+    } else {
+      setIsHeart(false); // Fixed typo here
+      setUserName(null);
+      setIsUserAdmin(window.localStorage.getItem("isAdmin") === "true");
       fetchWishlist();
     }
     fetchAllProducts();
-  }, [cookies.access_token]);
+  }, [userName]);
 
   const fetchWishlist = async () => {
-    const userName = window.localStorage.getItem("userName");
     const userEmail = window.localStorage.getItem("userEmail");
     if (!userEmail) return;
 
@@ -173,7 +178,7 @@ export const Shop = () => {
       <div className="shop-title">
         {loading ? (
           <h1>Loading</h1>
-        ) : cookies.access_token ? (
+        ) : userName ? (
           <h1>Hello {userName}</h1>
         ) : (
           <h3>Please log in to view account spesific details</h3>
@@ -300,9 +305,10 @@ export const Shop = () => {
           products={paginatedProducts}
           popUpCheck={handleAddToCart}
           popUpCheckLiked={handleLikedProduct}
-          isHeart={true}
+          isHeart={isHeart}
           wishlist={wishlist}
           updateWishlist={setWishlist}
+          isAdmin={isUserAdmin} // This line is important
         />
       ) : (
         <p>No products available</p>

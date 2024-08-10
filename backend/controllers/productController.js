@@ -57,20 +57,6 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-//GET all products from the mongoDB after saving them there with the function above
-// exports.getAllProductsFromDB = async (req, res) => {
-//   const page = parseInt(req.query.page) || 1;
-//   const limit = parseInt(req.query.limit) || 20;
-//   const skip = (page - 1) * limit;
-//   try {
-//     const products = await productModel.find().skip(skip).limit(limit);
-//     const totalProducts = await productModel.countDocuments();
-//     res.json({ products, totalProducts });
-//   } catch (error) {
-//     res.status(500).send("Server error");
-//   }
-// };
-
 exports.getAllProductsFromDB = async (req, res) => {
   try {
     const products = await productModel.find();
@@ -117,23 +103,99 @@ exports.getProductByCategory = async (req, res) => {
 };
 
 //GET a single product by the _id param beeing sent.
-exports.getProductById = async (req, res) => {
-  const { _id } = req.params;
+exports.getProductByName = async (req, res) => {
+  const { name } = req.body; // Extract product name from request body
+
   try {
-    const product = await productModel.findOne({ _id });
+    const product = await productModel.findOne({ title: name }); // Assuming the field is `title`, adjust if necessary
 
     if (!product) {
-      console.log(`No product with id of ${_id}`);
-      return res
-        .status(401)
-        .json({ success: false, message: `No product with id of ${_id}` });
+      console.log(`No product found with name of ${name}`);
+      return res.status(404).json({
+        success: false,
+        message: `No product found with name of ${name}`,
+      });
     }
 
-    res.status(200).json({
-      product: product,
-    });
+    res.status(200).json({ product });
   } catch (error) {
     console.log("Server error:", error.message);
     res.status(500).json({ success: false, message: error.message });
   }
+};
+
+exports.updateProduct = async (req, res) => {
+  const { id, title, price, category, description, rating, thumbnail } =
+    req.body;
+
+  try {
+    const updatedProduct = await productModel.findOneAndUpdate(
+      { id },
+      { title, price, category, description, rating, thumbnail },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    res.status(200).json({
+      message: "Product updated successfully!",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.addProduct = async (req, res) => {
+  const { userEmail } = req.body;
+  const authorizedEmail = "gambashop120@gmail.com";
+
+  console.log("Received request to add product:");
+  console.log("User email:", userEmail);
+  console.log("Authorized email:", authorizedEmail);
+
+  if (userEmail !== authorizedEmail) {
+    console.log("Unauthorized request to add product:", userEmail);
+    return res
+      .status(403)
+      .json({ error: "You are not authorized to add products." });
+  }
+
+  const { id, title, price, category, description, rating, thumbnail } =
+    req.body;
+
+  try {
+    console.log("Received product data:", {
+      id,
+      title,
+      price,
+      category,
+      description,
+      rating,
+      thumbnail,
+    });
+
+    const newProduct = new productModel({
+      id,
+      title,
+      price,
+      category,
+      description,
+      rating,
+      thumbnail,
+    });
+
+    await newProduct.save();
+    res.status(201).json({ message: "Product added successfully!" });
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteProduct = async (req, res) => {
+  const { productName } = req.body;
 };
