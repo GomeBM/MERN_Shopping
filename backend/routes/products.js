@@ -13,12 +13,12 @@ router.get("/productsDB", productController.getAllProductsFromDB);
 router.get("/:category", productController.getProductByCategory);
 
 //GET PRODUCT BY ID:
-router.post("/get-by-name", productController.getProductByName);
+router.post("/get-by-id", productController.getProductById);
 
 router.post("/add-product", productController.addProduct);
 
 router.put("/update-product", productController.updateProduct);
 
-router.put("delete-product", productController.deleteProduct);
+router.delete("/delete-product", productController.deleteProduct);
 
 module.exports = router;

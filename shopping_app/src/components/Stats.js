@@ -23,17 +23,21 @@ const Stats = () => {
         );
         const data = await response.json();
         if (response.ok) {
-          setPurchaseHistory(data.purchaseHistory); // Set the purchaseHistory state
+          setPurchaseHistory(data.purchaseHistory);
           processChartData(data.purchaseHistory);
         } else {
-          alert(data.message);
+          console.error("Error fetching purchase history:", data.message);
+          alert(
+            data.message ||
+              "An error occurred while fetching the purchase history"
+          );
         }
       } catch (error) {
         console.error("Error fetching purchase history:", error);
         alert("An error occurred while fetching the purchase history");
       }
     } else {
-      setPurchaseHistory([]); // No username available, clear purchase history
+      setPurchaseHistory([]);
     }
   };
 

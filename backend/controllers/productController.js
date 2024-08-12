@@ -103,17 +103,18 @@ exports.getProductByCategory = async (req, res) => {
 };
 
 //GET a single product by the _id param beeing sent.
-exports.getProductByName = async (req, res) => {
-  const { name } = req.body; // Extract product name from request body
+// GET a single product by the _id param being sent.
+exports.getProductById = async (req, res) => {
+  const { _id } = req.body; // Extract _id from request body
 
   try {
-    const product = await productModel.findOne({ title: name }); // Assuming the field is `title`, adjust if necessary
+    const product = await productModel.findOne({ _id }); // Fetch the product by _id
 
     if (!product) {
-      console.log(`No product found with name of ${name}`);
+      console.log(`No product found with id of ${_id}`);
       return res.status(404).json({
         success: false,
-        message: `No product found with name of ${name}`,
+        message: `No product found with id of ${_id}`,
       });
     }
 
@@ -129,10 +130,26 @@ exports.updateProduct = async (req, res) => {
     req.body;
 
   try {
+    // Ensure id is provided
+    if (id === undefined) {
+      return res.status(400).json({ message: "Product id is required." });
+    }
+
+    // Create the updated product data
+    const updatedProductData = {
+      title,
+      price,
+      category,
+      description,
+      rating,
+      thumbnail,
+    };
+
+    // Find and replace the product document with the new data
     const updatedProduct = await productModel.findOneAndUpdate(
       { id },
-      { title, price, category, description, rating, thumbnail },
-      { new: true } // Return the updated document
+      updatedProductData,
+      { new: true, runValidators: true } // Return the updated document and run validators
     );
 
     if (!updatedProduct) {
@@ -197,5 +214,34 @@ exports.addProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
-  const { productName } = req.body;
+  const { _id } = req.body;
+
+  if (!_id) {
+    return res.status(400).json({ message: "Product ID is required." });
+  }
+
+  try {
+    // Find the product first
+    const result = await productModel.findById(_id);
+
+    if (!result) {
+      return res.status(404).json({
+        message: "Product not found.",
+        title: "", // Ensure fields are defined
+        image: "",
+      });
+    }
+
+    // Delete the product
+    await productModel.findByIdAndDelete(_id);
+
+    res.json({
+      message: "Product deleted successfully.",
+      title: result.title, // Include these fields in the response
+      image: result.thumbnail,
+    });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).json({ message: "Server error." });
+  }
 };

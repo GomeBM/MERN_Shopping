@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Popup from "../../components/Popup";
 import "./Cart.css";
 
 export const Cart = () => {
@@ -7,6 +8,11 @@ export const Cart = () => {
   const [totalCost, setTotalCost] = useState("");
   const [email, setEmail] = useState(""); // New state for email input
   const [emailPrompt, setEmailPrompt] = useState(false); // Flag to show email prompt
+  const [showPopup, setShowPopup] = useState({
+    show: false,
+    message: "",
+    productImage: null,
+  });
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -141,7 +147,11 @@ export const Cart = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert(data.message || "Purchase confirmed!");
+        setShowPopup({
+          show: true,
+          message: `Purchase confirmed! Check you Email for details!`,
+          productImage: null,
+        });
         setCart([]);
         setTotalCost(0);
       } else {
@@ -176,7 +186,11 @@ export const Cart = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert(data.message || "Purchase confirmed!");
+        setShowPopup({
+          show: true,
+          message: `Purchase confirmed! Check you Email for details!`,
+          productImage: null,
+        });
         setCart([]);
         setTotalCost(0);
         localStorage.removeItem("dummyCart");
@@ -195,6 +209,15 @@ export const Cart = () => {
 
   return (
     <div className="cart-page">
+      {showPopup.show && (
+        <Popup
+          message={showPopup.message}
+          productImage={showPopup.productImage}
+          onClose={() =>
+            setShowPopup({ show: false, message: "", productImage: "" })
+          }
+        />
+      )}
       {name && <h1>{name}'s Cart</h1>}
       {cart.length === 0 ? (
         <p>Your cart is empty</p>

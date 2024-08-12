@@ -133,7 +133,7 @@ const Product = ({
   };
 
   const handleEditProduct = () => {
-    window.localStorage.setItem("productName", product.title);
+    window.localStorage.setItem("productId", product._id);
     navigate("/update-product");
   };
 
@@ -162,6 +162,7 @@ const Product = ({
           Edit product details
         </button>
       )}
+      {product._id && <p>Product ID: {product._id}</p>}
     </div>
   );
 };

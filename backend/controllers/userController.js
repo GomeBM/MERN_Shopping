@@ -77,7 +77,7 @@ exports.getPurchaseHistory = async (req, res) => {
     const user = await userModel.findOne({ email: userEmail }).populate({
       path: "purchase_history.items_purchased.product",
       model: "Product",
-      select: "title price category", // Specify the fields to populate
+      select: "title price category",
     });
 
     if (!user) {
@@ -88,13 +88,15 @@ exports.getPurchaseHistory = async (req, res) => {
     // Transform the data to a more frontend-friendly format
     const transformedHistory = user.purchase_history.map((purchase) => ({
       date: purchase.date_purchased,
-      items: purchase.items_purchased.map((item) => ({
-        productId: item.product._id,
-        productName: item.product.title,
-        quantity: item.quantity,
-        price: item.product.price,
-        category: item.product.category, // Include category here
-      })),
+      items: purchase.items_purchased
+        .filter((item) => item.product !== null) // Filter out null products
+        .map((item) => ({
+          productId: item.product ? item.product._id : "Deleted Product",
+          productName: item.product ? item.product.title : "Deleted Product",
+          quantity: item.quantity,
+          price: item.product ? item.product.price : 0,
+          category: item.product ? item.product.category : "Unknown",
+        })),
     }));
 
     console.log(`Purchase history retrieved for user: ${userEmail}`);

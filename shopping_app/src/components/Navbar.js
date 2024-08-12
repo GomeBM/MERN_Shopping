@@ -53,7 +53,7 @@ export const Navbar = ({ userEmail, isUserAdmin, updateUserState }) => {
   return (
     <div className="navbar">
       <Link to="/">
-        <Logo width="100%" height="100%" />
+        <Logo width="320px" height="auto" />
       </Link>
       <Link to="/cart" onClick={handleMenuItemClick}>
         <FaShoppingCart className="dropdown-icon" />
