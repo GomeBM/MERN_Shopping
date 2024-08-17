@@ -9,6 +9,8 @@ router.post("/login", userController.getUser);
 
 router.get("/:userEmail/purchase-history", userController.getPurchaseHistory);
 
+router.get("/admin-stats", userController.getAdminStats);
+
 router.get("/:userEmail/get-wishlist", userController.getWishlist);
 
 router.post("/:userEmail/add-to-wishlist", userController.addToWishlist);

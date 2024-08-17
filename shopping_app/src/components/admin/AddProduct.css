@@ -61,6 +61,12 @@ input[type="number"]::-webkit-outer-spin-button {
   transition: background-color 0.3s;
 }
 
+textarea {
+  resize: vertical;
+  min-height: 100px;
+  min-width: 100%;
+}
+
 .submit-product-btn:hover {
   background-color: #0056b3;
 }

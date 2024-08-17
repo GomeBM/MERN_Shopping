@@ -35,10 +35,10 @@ export const Shop = () => {
     if (storedUserName) {
       setIsUserAdmin(window.localStorage.getItem("isAdmin") === "true");
       setUserName(storedUserName);
-      setIsHeart(true); // Fixed typo here
+      setIsHeart(true);
       fetchWishlist();
     } else {
-      setIsHeart(false); // Fixed typo here
+      setIsHeart(false);
       setUserName(null);
       setIsUserAdmin(window.localStorage.getItem("isAdmin") === "true");
       fetchWishlist();

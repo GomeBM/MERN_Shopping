@@ -70,6 +70,66 @@ exports.createUser = async (req, res) => {
   }
 };
 
+exports.getAdminStats = async (req, res) => {
+  try {
+    const users = await userModel.find().populate({
+      path: "purchase_history.items_purchased.product",
+      model: "Product",
+      select: "title price category",
+    });
+
+    let moneyPerCategory = {};
+    let moneyPerMonth = Array(12).fill(0);
+    let productsPerCategory = {};
+
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+    users.forEach((user) => {
+      user.purchase_history.forEach((purchase) => {
+        const purchaseDate = new Date(purchase.date_purchased);
+
+        purchase.items_purchased.forEach((item) => {
+          // Check if the product still exists in the database
+          if (item.product) {
+            const { category, price } = item.product;
+            const quantity = item.quantity;
+            const totalPrice = price * quantity;
+
+            // Money per category
+            moneyPerCategory[category] =
+              (moneyPerCategory[category] || 0) + totalPrice;
+
+            // Products per category
+            productsPerCategory[category] =
+              (productsPerCategory[category] || 0) + quantity;
+
+            // Money per month (last 12 months)
+            if (purchaseDate >= oneYearAgo) {
+              const monthIndex = purchaseDate.getMonth();
+              moneyPerMonth[monthIndex] += totalPrice;
+            }
+          } else {
+            // If the product doesn't exist, we can log it or handle it as needed
+            console.log(
+              `Skipping deleted product in purchase history for user ${user._id}`
+            );
+          }
+        });
+      });
+    });
+
+    res.status(200).json({
+      moneyPerCategory,
+      moneyPerMonth,
+      productsPerCategory,
+    });
+  } catch (error) {
+    console.error("Error retrieving admin stats:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //GET a user's purchase history:
 exports.getPurchaseHistory = async (req, res) => {
   const { userEmail } = req.params;

@@ -154,7 +154,7 @@ const AddProduct = () => {
 
         <label>
           <span>Description:</span>
-          <input
+          <textarea
             type="text"
             name="description"
             value={product.description}
@@ -179,7 +179,7 @@ const AddProduct = () => {
 
         <label>
           <span>Thumbnail URL:</span>
-          <input
+          <textarea
             type="text"
             name="thumbnail"
             value={product.thumbnail}
