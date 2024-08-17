@@ -1,5 +1,3 @@
-/* src/components/ProductList.css */
-
 .product-list {
   display: grid; /* Use CSS Grid for layout */
   grid-template-columns: repeat(

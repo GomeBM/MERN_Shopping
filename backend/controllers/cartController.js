@@ -66,10 +66,8 @@ exports.removeFromCart = async (req, res) => {
       (cartItem) => cartItem.product._id.toString() !== product._id
     );
 
-    // Save the updated user document
     await user.save();
 
-    // Return the updated cart
     res.json({ cart: user.cart });
   } catch (error) {
     console.error("Error removing product from cart:", error);
@@ -116,7 +114,7 @@ exports.confirmPurchase = async (req, res) => {
       items_purchased: user.cart.map((item) => ({
         product: item.product._id,
         quantity: item.quantity,
-        category: item.product.category, // Include category here
+        category: item.product.category,
       })),
     };
 

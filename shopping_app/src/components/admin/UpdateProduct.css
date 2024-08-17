@@ -14,3 +14,11 @@
 .fetch-product-btn:hover {
   background-color: #0056b3;
 }
+
+.delete {
+  background-color: rgb(204, 16, 16);
+}
+
+.delete:hover {
+  background-color: rgb(127, 5, 5);
+}

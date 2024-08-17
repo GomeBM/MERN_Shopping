@@ -7,7 +7,6 @@ const Login = ({ updateUserState }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [cookie, setCookies] = useCookies(["access_token"]);
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {

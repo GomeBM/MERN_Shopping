@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
-import { GrEdit } from "react-icons/gr";
 import "./Product.css";
 
 const Product = ({
@@ -13,7 +12,6 @@ const Product = ({
   popUpCheckLiked,
   isAdmin,
 }) => {
-  console.log("Is admin in Product:", isAdmin); // Add this line
   const [wishListed, setWishListed] = useState(false);
   const navigate = useNavigate();
 

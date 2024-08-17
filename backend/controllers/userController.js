@@ -110,7 +110,6 @@ exports.getAdminStats = async (req, res) => {
               moneyPerMonth[monthIndex] += totalPrice;
             }
           } else {
-            // If the product doesn't exist, we can log it or handle it as needed
             console.log(
               `Skipping deleted product in purchase history for user ${user._id}`
             );
@@ -149,7 +148,7 @@ exports.getPurchaseHistory = async (req, res) => {
     const transformedHistory = user.purchase_history.map((purchase) => ({
       date: purchase.date_purchased,
       items: purchase.items_purchased
-        .filter((item) => item.product !== null) // Filter out null products
+        .filter((item) => item.product !== null)
         .map((item) => ({
           productId: item.product ? item.product._id : "Deleted Product",
           productName: item.product ? item.product.title : "Deleted Product",
@@ -176,7 +175,7 @@ exports.getWishlist = async (req, res) => {
   try {
     const user = await userModel.findOne({ email: userEmail }).populate({
       path: "wishlist.product",
-      select: "title price thumbnail", // Specify which fields to populate
+      select: "title price thumbnail",
     });
 
     if (!user) {
@@ -187,7 +186,6 @@ exports.getWishlist = async (req, res) => {
     console.log(`User found: ${user.email}`);
     console.log(`Wishlist items: ${user.wishlist.length}`);
 
-    // Transform the data to a more frontend-friendly format
     const transformedWishlist = user.wishlist.map((item) => ({
       productId: item.product._id.toString(),
       productName: item.product.title,

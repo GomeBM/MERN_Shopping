@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import "./AddProduct.css";
 import Popup from "../Popup";
 
-///https://unsplash.com/
-
 const AddProduct = () => {
   const handleGoodSubmit = (image, title) => {
     setShowPopup({

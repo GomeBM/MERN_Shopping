@@ -11,9 +11,6 @@ const ProductList = ({
   popUpCheckLiked,
   isAdmin,
 }) => {
-  console.log("Is admin in ProductList:", isAdmin); // Add this line
-  console.log("Products received:", products);
-
   return (
     <div className="product-list">
       {products.length > 0 ? (

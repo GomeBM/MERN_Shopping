@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./AddProduct.css"; // Assuming the styling is similar to AddProduct
+import "./AddProduct.css";
 import "./UpdateProduct.css";
-import Popup from "../Popup"; // Reuse the existing Popup component
+import Popup from "../Popup";
 
 const UpdateProduct = () => {
   const [showPopup, setShowPopup] = useState({
@@ -294,7 +294,7 @@ const UpdateProduct = () => {
           Update Product
         </button>
         <button
-          className="submit-product-btn"
+          className="submit-product-btn delete"
           type="button"
           onClick={handleDeleteConfirmation}
         >
@@ -309,7 +309,9 @@ const UpdateProduct = () => {
             additionalButtons={
               <>
                 <button onClick={handleConfirmDelete}>Yes</button>
-                <button onClick={handleCancelDelete}>No</button>
+                <button className="cancel-button" onClick={handleCancelDelete}>
+                  No
+                </button>
               </>
             }
           />

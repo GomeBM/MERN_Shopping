@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Wishlist.css";
-import ProductList from "../../components/ProductList";
 
 export const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
@@ -95,7 +94,6 @@ export const Wishlist = () => {
               </div>
             </div>
           ))}
-          {/* <ProductList products={wishlist} popUpCheck={null} isHeart={true} /> */}
         </div>
       )}
     </div>

@@ -32,10 +32,9 @@ const Contact = () => {
           from_email: formData.email,
           message: formData.message,
         },
-        process.env.REACT_APP_EMAIL_PUBLIC_KEY // Public key here
+        process.env.REACT_APP_EMAIL_PUBLIC_KEY
       );
 
-      // On success
       setPopup({
         message: "Your message has been sent successfully.",
         productImage: null,
@@ -46,7 +45,6 @@ const Contact = () => {
         message: "",
       });
     } catch (error) {
-      // On error
       console.error("EmailJS Error:", error);
       setPopup({
         message: "Failed to send message. Please try again.",

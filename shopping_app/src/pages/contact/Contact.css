@@ -1,4 +1,3 @@
-/* Contact Page styles */
 .contact-page {
   display: flex;
   flex-direction: column;
@@ -61,5 +60,5 @@
 .status-message {
   margin-top: 20px;
   font-size: 1rem;
-  color: #4caf50; /* Success message color */
+  color: #4caf50;
 }

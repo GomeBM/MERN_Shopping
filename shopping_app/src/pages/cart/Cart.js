@@ -6,8 +6,8 @@ export const Cart = () => {
   const [cart, setCart] = useState([]);
   const [name, setUserName] = useState("");
   const [totalCost, setTotalCost] = useState("");
-  const [email, setEmail] = useState(""); // New state for email input
-  const [emailPrompt, setEmailPrompt] = useState(false); // Flag to show email prompt
+  const [email, setEmail] = useState("");
+  const [emailPrompt, setEmailPrompt] = useState(false);
   const [showPopup, setShowPopup] = useState({
     show: false,
     message: "",

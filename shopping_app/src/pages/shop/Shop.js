@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useCookies } from "react-cookie";
 import ProductList from "../../components/ProductList";
 import Popup from "../../components/Popup";
-import { ReactComponent as Logo } from "../../assets/gambashop.svg";
 import "./Shop.css";
 
 export const Shop = () => {
@@ -151,7 +149,7 @@ export const Shop = () => {
     setMinPrice("");
     setMaxPrice("");
     setRating("");
-    setSearchTerm(""); // Clear search term as well
+    setSearchTerm("");
     setSelectedCategories([]);
   };
 
@@ -308,7 +306,7 @@ export const Shop = () => {
           isHeart={isHeart}
           wishlist={wishlist}
           updateWishlist={setWishlist}
-          isAdmin={isUserAdmin} // This line is important
+          isAdmin={isUserAdmin}
         />
       ) : (
         <p>No products available</p>

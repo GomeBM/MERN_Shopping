@@ -75,7 +75,6 @@ exports.getProductByCategory = async (req, res) => {
   const skip = (page - 1) * limit; // Calculate number of documents to skip
 
   try {
-    // Query the database for products matching the given category with pagination
     const products = await productModel
       .find({ category: category })
       .skip(skip)
@@ -102,10 +101,9 @@ exports.getProductByCategory = async (req, res) => {
   }
 };
 
-//GET a single product by the _id param beeing sent.
 // GET a single product by the _id param being sent.
 exports.getProductById = async (req, res) => {
-  const { _id } = req.body; // Extract _id from request body
+  const { _id } = req.body;
 
   try {
     const product = await productModel.findOne({ _id }); // Fetch the product by _id
@@ -135,7 +133,6 @@ exports.updateProduct = async (req, res) => {
       return res.status(400).json({ message: "Product id is required." });
     }
 
-    // Create the updated product data
     const updatedProductData = {
       title,
       price,
@@ -145,11 +142,10 @@ exports.updateProduct = async (req, res) => {
       thumbnail,
     };
 
-    // Find and replace the product document with the new data
     const updatedProduct = await productModel.findOneAndUpdate(
       { id },
       updatedProductData,
-      { new: true, runValidators: true } // Return the updated document and run validators
+      { new: true, runValidators: true }
     );
 
     if (!updatedProduct) {
@@ -227,7 +223,7 @@ exports.deleteProduct = async (req, res) => {
     if (!result) {
       return res.status(404).json({
         message: "Product not found.",
-        title: "", // Ensure fields are defined
+        title: "",
         image: "",
       });
     }
@@ -237,7 +233,7 @@ exports.deleteProduct = async (req, res) => {
 
     res.json({
       message: "Product deleted successfully.",
-      title: result.title, // Include these fields in the response
+      title: result.title,
       image: result.thumbnail,
     });
   } catch (error) {
