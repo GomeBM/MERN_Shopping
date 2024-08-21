@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { IoLogOutOutline, IoStatsChart } from "react-icons/io5";

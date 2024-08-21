@@ -40,13 +40,16 @@ const UpdateProduct = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/get-by-id", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ _id: productId }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASEURL}/get-by-id`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: productId }),
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();
@@ -77,13 +80,16 @@ const UpdateProduct = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:4000/update-product`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...product }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASEURL}/update-product`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...product }),
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();
@@ -145,13 +151,16 @@ const UpdateProduct = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/delete-product", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ _id: confirmationData.productId }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASEURL}/delete-product`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: confirmationData.productId }),
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();

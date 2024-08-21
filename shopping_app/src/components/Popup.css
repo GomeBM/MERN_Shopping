@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it appears on top of other content */
+  z-index: 1000;
 }
 
 .popup {
@@ -17,7 +17,7 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 500px; /* Fixed width */
-  max-height: 80vh; /* Limit the height to 80% of the viewport */
+  max-height: 80vh;
   overflow: auto; /* Add scroll if content exceeds height */
   text-align: center;
 }

@@ -43,13 +43,16 @@ const AddProduct = () => {
 
     try {
       const userEmail = window.localStorage.getItem("userEmail");
-      const response = await fetch("http://localhost:4000/add-product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...product, userEmail }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASEURL}/add-product`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...product, userEmail }),
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();

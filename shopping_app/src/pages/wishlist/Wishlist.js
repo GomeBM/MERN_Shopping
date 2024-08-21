@@ -12,7 +12,7 @@ export const Wishlist = () => {
       if (userEmail) {
         try {
           const response = await fetch(
-            `http://localhost:4000/auth/${userEmail}/get-wishlist`
+            `${process.env.REACT_APP_BACKEND_BASEURL}/auth/${userEmail}/get-wishlist`
           );
           const data = await response.json();
           if (response.ok) {
@@ -44,7 +44,7 @@ export const Wishlist = () => {
     const userEmail = window.localStorage.getItem("userEmail");
     try {
       const response = await fetch(
-        `http://localhost:4000/auth/${userEmail}/add-to-wishlist`,
+        `${process.env.REACT_APP_BACKEND_BASEURL}/auth/${userEmail}/add-to-wishlist`,
         {
           method: "POST",
           headers: {

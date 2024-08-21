@@ -21,7 +21,7 @@ export const Cart = () => {
       if (userName) {
         try {
           const response = await fetch(
-            `http://localhost:4000/cart/${userEmail}`
+            `${process.env.REACT_APP_BACKEND_BASEURL}/cart/${userEmail}`
           );
           const data = await response.json();
           if (response.ok) {
@@ -83,18 +83,21 @@ export const Cart = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/cart/removeItem`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userEmail,
-          product: {
-            _id: productId,
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASEURL}/cart/removeItem`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            userEmail,
+            product: {
+              _id: productId,
+            },
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -134,7 +137,7 @@ export const Cart = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/cart/confirm-purchase",
+        `${process.env.REACT_APP_BACKEND_BASEURL}/cart/confirm-purchase`,
         {
           method: "POST",
           headers: {
@@ -173,7 +176,7 @@ export const Cart = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/cart/confirm-purchase-with-email",
+        `${process.env.REACT_APP_BACKEND_BASEURL}/cart/confirm-purchase-with-email`,
         {
           method: "POST",
           headers: {

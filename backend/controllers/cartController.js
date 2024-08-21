@@ -68,7 +68,7 @@ exports.removeFromCart = async (req, res) => {
 
     await user.save();
 
-    res.json({ cart: user.cart });
+    res.status(200).json({ cart: user.cart });
   } catch (error) {
     console.error("Error removing product from cart:", error);
     res.status(500).json({ error: "Server error" });
@@ -147,6 +147,7 @@ exports.confirmPurchase = async (req, res) => {
       }
     );
 
+    // Reset the users cart
     user.cart = [];
     await user.save();
 

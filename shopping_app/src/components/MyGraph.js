@@ -1,3 +1,7 @@
+//Credit for PedroTech:
+//https://www.youtube.com/watch?v=ZpfseYy5Hxg&t=8s
+//https://www.youtube.com/watch?v=RF57yDglDfE&t=240s
+
 import React from "react";
 import {
   Chart as ChartJS,

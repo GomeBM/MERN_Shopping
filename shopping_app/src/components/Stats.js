@@ -1,3 +1,7 @@
+//Credit for PedroTech:
+//https://www.youtube.com/watch?v=ZpfseYy5Hxg&t=8s
+//https://www.youtube.com/watch?v=RF57yDglDfE&t=240s
+
 import React, { useState, useEffect } from "react";
 import MyGraph from "./MyGraph";
 import "./Stats.css";
@@ -35,7 +39,7 @@ const Stats = () => {
     const userEmail = window.localStorage.getItem("userEmail");
     try {
       const response = await fetch(
-        `http://localhost:4000/auth/${userEmail}/purchase-history`
+        `${process.env.REACT_APP_BACKEND_BASEURL}/auth/${userEmail}/purchase-history`
       );
       const data = await response.json();
       if (response.ok) {
@@ -57,7 +61,9 @@ const Stats = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:4000/auth/admin-stats");
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASEURL}/auth/admin-stats`
+      );
       const data = await response.json();
       if (response.ok) {
         setAdminStats(data);
@@ -84,6 +90,7 @@ const Stats = () => {
       purchaseHistory.forEach((purchase) => {
         const purchaseDate = new Date(purchase.date);
         const month = purchaseDate.getMonth();
+        console.log(`purchase from ${month}`);
         const year = purchaseDate.getFullYear();
 
         purchase.items.forEach((item) => {
@@ -95,7 +102,7 @@ const Stats = () => {
               purchaseDate >=
               new Date(new Date().setFullYear(new Date().getFullYear() - 1))
             ) {
-              monthlyTotals[month] += item.price * item.quantity; // Sum up monthly totals
+              monthlyTotals[month] += item.price * item.quantity;
             }
           } else {
             if (categoryTotals[item.category]) {

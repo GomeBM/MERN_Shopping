@@ -18,11 +18,11 @@ export const Shop = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [rating, setRating] = useState("");
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [searchTerm, setSearchTerm] = useState("");
   const [showPriceFilter, setShowPriceFilter] = useState(false);
   const [showRatingFilter, setShowRatingFilter] = useState(false);
   const [showCategoriesFilter, setShowCategoriesFilter] = useState(false);
-  const [showSearchFilter, setShowSearchFilter] = useState(false); // New state for search filter visibility
+  const [showSearchFilter, setShowSearchFilter] = useState(false);
   const [wishlist, setWishlist] = useState([]);
   const [isUserAdmin, setIsUserAdmin] = useState(false);
   const [isHeart, setIsHeart] = useState(false);
@@ -50,7 +50,7 @@ export const Shop = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/auth/${userEmail}/get-wishlist`
+        `${process.env.REACT_APP_BACKEND_BASEURL}/auth/${userEmail}/get-wishlist`
       );
       if (response.ok) {
         const data = await response.json();
@@ -66,7 +66,9 @@ export const Shop = () => {
   const fetchAllProducts = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/productsDB");
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASEURL}/productsDB`
+      );
       const data = await response.json();
       setAllProducts(data.products || []);
       setFilteredProducts(data.products || []);
@@ -135,7 +137,7 @@ export const Shop = () => {
     });
   };
 
-  const handleLikedProduct = (product) => {
+  const handleLikedProduct = () => {
     if (!userName) {
       setShowPopup({
         show: true,

@@ -33,7 +33,7 @@ const Product = ({
 
     try {
       const response = await fetch(
-        `http://localhost:4000/auth/${userEmail}/add-to-wishlist`,
+        `${process.env.REACT_APP_BACKEND_BASEURL}/auth/${userEmail}/add-to-wishlist`,
         {
           method: "POST",
           headers: {
@@ -76,16 +76,19 @@ const Product = ({
       const productId = product._id ? product._id.toString() : "";
 
       try {
-        const response = await fetch("http://localhost:4000/cart/add", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userEmail,
-            productId,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_BASEURL}/cart/add`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userEmail,
+              productId,
+            }),
+          }
+        );
 
         const data = await response.json();
 
