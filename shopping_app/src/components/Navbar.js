@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { IoLogOutOutline, IoStatsChart } from "react-icons/io5";
+import { GiHamburgerMenu } from "react-icons/gi";
 import {
   IoMdInformationCircleOutline,
   IoMdAddCircleOutline,
@@ -14,6 +15,7 @@ import "./Navbar.css";
 export const Navbar = ({ userEmail, isUserAdmin, updateUserState }) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isInfoMenuOpen, setIsInfoMenuOpen] = useState(false);
+  const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const navigate = useNavigate();
   const userMenuRef = useRef(null);
   const infoMenuRef = useRef(null);
@@ -52,7 +54,7 @@ export const Navbar = ({ userEmail, isUserAdmin, updateUserState }) => {
   return (
     <div className="navbar">
       <Link to="/">
-        <Logo width="320px" height="auto" />
+        <Logo className="gambashop-logo" />
       </Link>
       <Link to="/cart" onClick={handleMenuItemClick}>
         <FaShoppingCart className="dropdown-icon" />

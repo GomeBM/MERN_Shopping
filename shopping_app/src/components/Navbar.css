@@ -183,3 +183,54 @@
   opacity: 1;
   transform: scaleY(1);
 }
+
+.gambashop-logo {
+  width: 320px;
+  height: auto;
+}
+
+@media screen and (max-width: 830px) {
+  .gambashop-logo {
+    width: 180px;
+    height: auto;
+  }
+  .navbar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
+  }
+
+  .navbar-content {
+    display: none;
+  }
+
+  .navbar-content.show {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .hamburger-menu {
+    display: block;
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    margin-right: 10px;
+  }
+
+  .user-controls-menu,
+  .info-controls-menu {
+    top: 100%;
+    left: auto;
+    right: 0;
+  }
+}

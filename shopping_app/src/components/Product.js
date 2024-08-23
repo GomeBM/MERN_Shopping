@@ -163,7 +163,7 @@ const Product = ({
           Edit product details
         </button>
       )}
-      {product._id && <p>Product ID: {product._id}</p>}
+      {product._id && <p className="product-id">Product ID: {product._id}</p>}
     </div>
   );
 };
