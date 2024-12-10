@@ -24,7 +24,7 @@
   width: 150px;
   height: 150px;
   object-fit: cover;
-  margin: 10px auto; /* Add some margin if needed */
+  margin: 10px auto; 
 }
 
 .cart-item-details {
@@ -51,32 +51,32 @@
 }
 
 .purchase-btn {
-  background-color: #007bff; /* Primary color */
-  color: #fff; /* White text */
+  background-color: #007bff; 
+  color: #fff; 
   border: none;
   border-radius: 8px;
-  padding: 12px 20px; /* Padding for the button */
-  font-size: 16px; /* Font size */
+  padding: 12px 20px;
+  font-size: 16px; 
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 20px; /* Space above the button */
-  text-align: center; /* Center text inside the button */
+  margin-top: 20px; 
+  text-align: center; 
 }
 
 .purchase-btn:hover {
-  background-color: #0056b3; /* Darker shade of primary color on hover */
+  background-color: #0056b3; 
 }
 
 .purchase-btn:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5); /* Outline for accessibility */
+  box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5); 
 }
 
 .total-cost {
   font-size: 18px;
   font-weight: bold;
-  margin: 20px 0; /* Space above and below the total cost text */
+  margin: 20px 0; 
 }
 
 .submit-email_btn {
